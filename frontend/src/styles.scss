@@ -38,7 +38,8 @@ $frontend-theme: mat.define-light-theme(
 
 /* You can add global styles to this file, and also import other style files */
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900;1000&display=swap");
-@import "./color.scss";
+
+$dark1: #141414;
 
 * {
   margin: 0;
@@ -50,4 +51,7 @@ $frontend-theme: mat.define-light-theme(
 body {
   background: $dark1;
   max-height: 100dvh;
+}
+router-outlet {
+  display: none;
 }

@@ -4,7 +4,30 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  responseTimeInterceptorFunctional,
+  loadingSpinnerInterceptorFunctional,
+  authInterceptorFunctional,
+  retryInterceptorFunctional,
+  loggingInterceptorFunctional,
+  baseUrlInterceptor,
+} from './interceptors/headerHttp.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideClientHydration(), provideAnimationsAsync()]
+  providers: [
+    provideRouter(routes),
+    provideClientHydration(),
+    provideAnimationsAsync(),
+    provideHttpClient(
+      withInterceptors([
+        baseUrlInterceptor,
+        responseTimeInterceptorFunctional,
+        loadingSpinnerInterceptorFunctional,
+        authInterceptorFunctional,
+        retryInterceptorFunctional,
+        loggingInterceptorFunctional,
+      ])
+    ),
+  ],
 };

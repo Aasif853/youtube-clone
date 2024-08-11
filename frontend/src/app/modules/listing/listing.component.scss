@@ -1,4 +1,4 @@
-@import "../../../../color.scss";
+@import "../../../color.scss";
 .main {
   border-radius: $border-radius;
   display: grid;
@@ -6,7 +6,8 @@
   gap: 2rem;
   justify-content: space-between;
   overflow: auto;
-  height: fit-content;
+  // height: fit-content;
+  height: calc(100vh - 140px);
   &::-webkit-scrollbar {
     width: 0px;
   }

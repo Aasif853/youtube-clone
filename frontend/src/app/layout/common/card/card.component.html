@@ -1,10 +1,7 @@
 <div class="card">
   <div class="thumbnail">
-    <img
-      src="https://i.ytimg.com/vi/Kt3DavtVGVE/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLAyAJFjZELD-vk1n3d4rohdXMqc_Q"
-      alt="Thumbnail"
-    />
-    <div class="duration">17:49</div>
+    <img [src]="video.thumbnail" alt="Thumbnail" />
+    <div class="duration">{{ video.duration }}</div>
   </div>
   <div class="content">
     <div class="profile-pic">
@@ -13,7 +10,7 @@
         alt="profile"
       />
     </div>
-    <span class="title">Unravelling the Magic behind Polyrhythms</span>
+    <span class="title">{{ video.title }}</span>
     <span class="channel-name"
       >Hyperplexed
       <span class="verified">
@@ -25,7 +22,7 @@
       </span>
     </span>
     <span class="views"
-      >139K views . <span class="time">2 months ago</span></span
+      >{{ video.views }} views . <span class="time">2 months ago</span></span
     >
   </div>
 </div>
