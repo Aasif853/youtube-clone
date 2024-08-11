@@ -1,0 +1,108 @@
+@import "../../../../color.scss";
+.card {
+  background: $dark2;
+  border-radius: $border-radius;
+  padding: 1rem;
+  border: 2px solid transparent;
+  height: fit-content;
+  .thumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: calc(#{$border-radius} - 5px);
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease-in-out;
+    }
+    .duration {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.5rem;
+      padding: 2px 5px;
+      background: rgba(0, 0, 0, 0.736);
+      color: $light1;
+      font-size: 0.7rem;
+      border-radius: min(5px, calc(#{$border-radius}));
+    }
+  }
+
+  .content {
+    width: 100%;
+    position: relative;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .profile-pic {
+      position: absolute;
+      top: -20px;
+      left: 10px;
+      height: 40px;
+      aspect-ratio: 1;
+      border-radius: min(30%, calc(#{$border-radius}));
+      overflow: hidden;
+      img {
+        width: 100%;
+      }
+    }
+
+    .title {
+      display: block;
+      color: $light2;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+    .channel-name {
+      color: $light4;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+
+      .verified {
+        display: inline-block;
+        height: 15px;
+        svg {
+          fill: $light4;
+          height: 100%;
+        }
+      }
+    }
+
+    .views,
+    .time {
+      display: inline-block;
+      color: $light4;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  }
+
+  &:hover {
+    border: 2px solid $dark0;
+
+    .thumbnail {
+      img {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  @media (max-width: 1250px) {
+    flex: 1 0 30%;
+  }
+  @media (max-width: 1000px) {
+    flex: 1 0 40%;
+  }
+  @media (max-width: 550px) {
+    flex: 1 0 100%;
+  }
+}

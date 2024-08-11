@@ -1,0 +1,13 @@
+@import "../../../../color.scss";
+.main {
+  border-radius: $border-radius;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem;
+  justify-content: space-between;
+  overflow: auto;
+  height: fit-content;
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+}
