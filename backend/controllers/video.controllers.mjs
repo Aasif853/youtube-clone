@@ -7,7 +7,26 @@ export const getVidoes = async (req, res) => {
       user: true,
     },
   });
-  res.send(videos);
+  res.send({ data: videos });
+};
+export const getSingleVideo = async (req, res, next) => {
+  const id = req.params.id ? parseInt(req.params.id) : null;
+  console.log('🚀 ~ getSingleVideo ~ id:', id);
+  if (!id) {
+    return next({ message: `Please provide valid id` });
+  }
+
+  const video = await prisma.video.findUnique({
+    where: { id },
+    include: {
+      user: true,
+    },
+  });
+  if (!video) {
+    res.status(404);
+    return next({ message: `Could not find data with id ${id}` });
+  }
+  res.send({ data: video });
 };
 
 export const postVideos = async (req, res) => {

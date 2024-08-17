@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { ListingComponent } from './modules/listing/listing.component';
+import { WatchComponent } from './modules/watch/watch.component';
 
 export const routes: Routes = [
   {
@@ -10,6 +11,10 @@ export const routes: Routes = [
       {
         path: '',
         component: ListingComponent,
+      },
+      {
+        path: 'watch/:id',
+        component: WatchComponent,
       },
     ],
   },

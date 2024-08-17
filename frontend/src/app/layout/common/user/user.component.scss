@@ -1,0 +1,100 @@
+@import "../../../../color.scss";
+
+.profile-icon {
+    height: 100%;
+    color: $light2;
+    border-radius: min(10px, calc(#{$border-radius}));
+    overflow: hidden;
+    padding: 0.3rem;
+    background: $dark3;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    border: 2px solid transparent;
+
+    .profile-pic {
+        height: 100%;
+        aspect-ratio: 1;
+        border-radius: min(8px, calc(#{$border-radius}));
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .arrow-down-icon {
+        width: 20px;
+        display: grid;
+        place-content: center;
+        svg {
+            width: 100%;
+            fill: none;
+            stroke-width: 3px;
+            stroke: $light4;
+        }
+    }
+
+    &:hover {
+        border: 2px solid $dark0;
+        background: $dark1;
+
+        .profile-pic {
+            filter: brightness(2);
+        }
+    }
+}
+.channel {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    .profile-pic {
+        height: 40px;
+        aspect-ratio: 1;
+        border-radius: min(30%, calc(#{$border-radius}));
+        overflow: hidden;
+        img {
+            width: 100%;
+        }
+    }
+    .channel-name {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: $light2;
+        .verified {
+            display: inline-block;
+            height: 15px;
+            svg {
+                fill: $light4;
+                height: 100%;
+            }
+        }
+    }
+    .user-email {
+        color: $light4;
+    }
+}
+.profile-card {
+    background: $dark3;
+    border-radius: $border-radius;
+    // padding: 1rem;
+    border: 2px solid transparent;
+    height: 100%;
+    cursor: pointer;
+    color: $light2;
+
+    .action-item {
+        cursor: pointer;
+        color: $light1;
+        padding-left: 1rem;
+        padding-block: 0.5rem;
+        /* margin-bottom: 0.5rem; */
+        &:hover {
+            background: $dark1;
+            /* border: 2px solid $dark0; */
+        }
+    }
+}

@@ -1,8 +1,8 @@
-<section class="main" id="main">
-  <ng-container *ngFor="let video of videoArray">
-    <app-card [video]="video" />
-  </ng-container>
-  <ng-container *ngFor="let video of videoArray">
-    <app-card [video]="video" />
-  </ng-container>
+<section class="listing">
+  <app-category />
+  <section class="main" id="main">
+    <ng-container *ngFor="let video of videoArray">
+      <app-card [video]="video" />
+    </ng-container>
+  </section>
 </section>

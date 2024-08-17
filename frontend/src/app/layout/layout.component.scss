@@ -302,43 +302,6 @@
   }
 }
 
-// =========================catagories=======================================
-.catagories {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  border-radius: $border-radius;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  span {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    padding: 5px 20px;
-    background: $dark2;
-    color: $light2;
-    font-size: 0.8rem;
-    font-weight: 700;
-    border-radius: $border-radius;
-    cursor: pointer;
-
-    &:first-child {
-      background: $light1;
-      color: $dark1;
-    }
-
-    &:hover {
-      background: $light3;
-      color: $dark1;
-    }
-  }
-}
-
 @media (max-width: 900px) {
   .item-title,
   .sidebar-item-section2 {

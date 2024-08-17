@@ -1,9 +1,9 @@
-import prisma from '../db/client.mjs';
-import { validationResult } from 'express-validator';
+import prisma from "../db/client.mjs";
+import { validationResult } from "express-validator";
 
 export const getUsers = async (req, res) => {
   const allUser = await prisma.user.findMany();
-  console.log('🚀 ~ router.get ~ allUser:', allUser);
+  console.log("🚀 ~ router.get ~ allUser:", allUser);
   res.send({ data: allUser });
 };
 
@@ -16,22 +16,22 @@ export const createuser = async (req, res, next) => {
   // try {
 
   const user = await prisma.user.findUnique({
-    where: { email: body['email'] },
+    where: { email: body["email"] },
   });
   if (user) {
     res.status(400);
-    return next({ message: 'Email already exist' });
+    return next({ message: "Email already exist" });
   }
   await prisma.user
     .create({
       data: body,
     })
     .then((userData) => {
-      console.log('🚀 ~ createuser ~ userData:', userData);
-      res.status(200).send({ dat: user });
+      console.log("🚀 ~ createuser ~ userData:", userData);
+      res.status(200).send({ data: user });
     })
     .catch((err) => {
-      console.log('🚀 ~ createuser ~ err:', err);
+      console.log("🚀 ~ createuser ~ err:", err);
       return res.status(400).send(err);
     });
   // } catch (err) {
@@ -66,4 +66,45 @@ export const deleteUser = async (req, res) => {
       res.sendStatus(200);
     })
     .catch((err) => res.sendStatus(400));
+};
+
+export const signUpUser = async (req, res) => {
+  const { body } = req;
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+  try {
+    if (user) {
+      await prisma.user
+        .update({ where: { email: email }, data: body })
+        .then((user) => {
+          res.status(200).json({
+            message: "User signed in succesfully",
+            user,
+          });
+        });
+    } else {
+      await prisma.user
+        .create({
+          data: body,
+        })
+        .then((user) =>
+          res.status(200).json({
+            message: "User signed up succesfully",
+            user,
+          }),
+        );
+    }
+  } catch (err) {
+    console.log("Error", err);
+    res.status(401).json({
+      message: "User not successful created",
+      error: err.mesage,
+    });
+  }
 };

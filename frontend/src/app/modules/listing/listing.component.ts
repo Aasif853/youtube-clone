@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { CardComponent } from '../../layout/common/card/card.component';
-import { VideoService } from '../../service/video.service';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from "@angular/core";
+import { CardComponent } from "../../layout/common/card/card.component";
+import { VideoService } from "../../service/video.service";
+import { CommonModule } from "@angular/common";
+import { CategoryComponent } from "../../layout/common/category/category.component";
 
 @Component({
-  selector: 'app-listing',
+  selector: "app-listing",
   standalone: true,
-  imports: [CommonModule, CardComponent],
-  templateUrl: './listing.component.html',
-  styleUrl: './listing.component.scss',
+  imports: [CommonModule, CardComponent, CategoryComponent],
+  templateUrl: "./listing.component.html",
+  styleUrl: "./listing.component.scss",
 })
 export class ListingComponent implements OnInit {
   videoArray = [];
+  videoService = inject(VideoService);
 
-  constructor(private videoService: VideoService) {}
   ngOnInit(): void {
     this.getVideos();
   }

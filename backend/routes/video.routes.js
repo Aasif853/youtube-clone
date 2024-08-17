@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { getVidoes, postVideos } from '../controllers/video.controllers.mjs';
+import {
+  getVidoes,
+  getSingleVideo,
+  postVideos,
+} from '../controllers/video.controllers.mjs';
 import { body } from 'express-validator';
 import {
   uploadFileToS3,
@@ -11,6 +15,7 @@ const upload = multer();
 const router = Router();
 
 router.get('/', getVidoes);
+router.get('/:id', getSingleVideo);
 router.post('/', body('title').isString(), postVideos);
 router.post('/upload', upload.single('file'), uploadFileToS3);
 // router.post('/upload', upload.single('file'), uploadFileToS3);

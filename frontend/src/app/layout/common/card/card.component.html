@@ -1,5 +1,5 @@
 <div class="card">
-  <div class="thumbnail">
+  <div class="thumbnail" [routerLink]="['watch', video.id]">
     <img [src]="video.thumbnail" alt="Thumbnail" />
     <div class="duration">{{ video.duration }}</div>
   </div>

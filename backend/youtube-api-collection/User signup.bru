@@ -1,0 +1,18 @@
+meta {
+  name: User signup
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/api/v1/users/signUp
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "mohammed1@yopmil.com",
+    "name": "Mohammed Aasif"
+  }
+}

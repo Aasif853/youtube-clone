@@ -5,6 +5,7 @@ import { SidebarComponent } from './common/sidebar/sidebar.component';
 import { CategoryComponent } from './common/category/category.component';
 import { HeaderComponent } from './common/header/header.component';
 import { ListingComponent } from '../modules/listing/listing.component';
+import { UserComponent } from './common/user/user.component';
 
 @Component({
   selector: 'app-layout',
@@ -13,9 +14,9 @@ import { ListingComponent } from '../modules/listing/listing.component';
     RouterOutlet,
     SharedModule,
     SidebarComponent,
-    CategoryComponent,
     HeaderComponent,
     ListingComponent,
+    UserComponent,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',

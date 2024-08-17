@@ -1,4 +1,11 @@
 @import "../../../color.scss";
+
+.listing {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .main {
   border-radius: $border-radius;
   display: grid;

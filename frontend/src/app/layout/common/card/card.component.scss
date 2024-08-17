@@ -2,14 +2,16 @@
 .card {
   background: $dark2;
   border-radius: $border-radius;
-  padding: 1rem;
+  // padding: 1rem;
   border: 2px solid transparent;
   height: 100%;
+  cursor: pointer;
   .thumbnail {
     position: relative;
     width: 100%;
     aspect-ratio: 16/9;
-    border-radius: calc(#{$border-radius} - 5px);
+    border-radius: calc(#{$border-radius} - 5px) calc(#{$border-radius} - 5px) 0
+      0;
     overflow: hidden;
     img {
       width: 100%;
@@ -32,7 +34,8 @@
   .content {
     width: 100%;
     position: relative;
-    padding-top: 30px;
+    // padding-top: 30px;
+    padding: 30px 1rem 1rem 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
