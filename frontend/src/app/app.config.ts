@@ -18,12 +18,14 @@ import {
   SocialAuthServiceConfig,
 } from "@abacritt/angularx-social-login";
 import { environment } from "../environments/environment.development";
+import { CoolStorageModule } from "angular2-cool-storage";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideClientHydration(),
     provideAnimationsAsync(),
+    CoolStorageModule,
     provideHttpClient(
       withInterceptors([
         baseUrlInterceptor,

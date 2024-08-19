@@ -1,9 +1,12 @@
 export interface User {
-  id: number;
+  id?: number;
   email: string;
   name?: string;
   username?: string;
   photoUrl?: string;
+  googleId?: string;
+  googleToken?: string;
+  token?: string;
   videos?: Video[];
 }
 

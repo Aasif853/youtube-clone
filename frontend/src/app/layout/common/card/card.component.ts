@@ -1,13 +1,19 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {
+  CommonModule,
+  NgOptimizedImage,
+  provideImgixLoader,
+} from "@angular/common";
+import { Component, Input } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { environment } from "../../../../environments/environment";
 
 @Component({
-  selector: 'app-card',
+  selector: "app-card",
   standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './card.component.html',
-  styleUrl: './card.component.scss',
+  imports: [CommonModule, RouterModule, NgOptimizedImage],
+  providers: [provideImgixLoader(environment.mediaUrl)],
+  templateUrl: "./card.component.html",
+  styleUrl: "./card.component.scss",
 })
 export class CardComponent {
   @Input() video: any;

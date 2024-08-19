@@ -1,5 +1,6 @@
 import prisma from "../db/client.mjs";
 import { validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
 
 export const getUsers = async (req, res) => {
   const allUser = await prisma.user.findMany();
@@ -79,9 +80,12 @@ export const signUpUser = async (req, res) => {
     where: { email },
   });
   try {
+    const token = jwt.sign({ user: body }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
     if (user) {
       await prisma.user
-        .update({ where: { email: email }, data: body })
+        .update({ where: { email: email }, data: { token, ...body } })
         .then((user) => {
           res.status(200).json({
             message: "User signed in succesfully",
@@ -91,7 +95,7 @@ export const signUpUser = async (req, res) => {
     } else {
       await prisma.user
         .create({
-          data: body,
+          data: { token, ...body },
         })
         .then((user) =>
           res.status(200).json({
@@ -102,6 +106,7 @@ export const signUpUser = async (req, res) => {
     }
   } catch (err) {
     console.log("Error", err);
+    // next(err);
     res.status(401).json({
       message: "User not successful created",
       error: err.mesage,

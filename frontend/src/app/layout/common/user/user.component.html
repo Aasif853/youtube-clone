@@ -1,13 +1,15 @@
-<asl-google-signin-button
-    *ngIf="!user"
-    class="profile-icon"
-    type="standard"
-    theme="filled_black"
-    size="medium"
-></asl-google-signin-button>
+<ng-template #googleButton>
+    <asl-google-signin-button
+        *ngIf="isUserValidated && !user"
+        class="profile-icon"
+        type="standard"
+        theme="filled_black"
+        size="medium"
+    ></asl-google-signin-button>
+</ng-template>
 
 <button
-    *ngIf="user"
+    *ngIf="user; else googleButton"
     class="profile-icon"
     tabindex="0"
     (click)="openPanel()"
@@ -61,11 +63,13 @@
             class="relative w-full flex flex-col flex-auto sm:max-h-120 overflow-y-auto"
         >
             <div class="flex flex-col flex-auto sm:justify-start">
-                <div class="action-item">Channel</div>
-                <div class="action-item">Profile</div>
-                <div class="action-item">Settings</div>
+                <div class="action-item" [routerLink]="['channel', 1]">
+                    Channel
+                </div>
+                <div class="action-item" routerLink="/profile">Profile</div>
+                <div class="action-item" routerLink="/channel">Settings</div>
                 <hr />
-                <div class="action-item">Logout</div>
+                <div class="action-item" (click)="signOut()">Logout</div>
             </div>
         </div>
     </div>

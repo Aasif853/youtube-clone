@@ -1,8 +1,15 @@
 <section class="listing">
-  <app-category />
-  <section class="main" id="main">
-    <ng-container *ngFor="let video of videoArray">
-      <app-card [video]="video" />
-    </ng-container>
-  </section>
+    <!-- <app-category *ngIf="showCategory" /> -->
+    <infinite-scroll (scrolled)="onScroll()">
+        <section class="main" id="main">
+            <ng-container *ngIf="videoArray.length > 0">
+                <app-card [video]="video" *ngFor="let video of videoArray" />
+            </ng-container>
+            <ng-container *ngIf="loading">
+                <app-card
+                    *ngFor="let i of [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]"
+                />
+            </ng-container>
+        </section>
+    </infinite-scroll>
 </section>

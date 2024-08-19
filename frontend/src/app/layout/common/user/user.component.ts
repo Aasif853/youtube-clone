@@ -22,11 +22,13 @@ import { CommonModule } from "@angular/common";
 import { User } from "../../../types/interfaces";
 import { AppSettingService } from "../../../service/appSetting.service";
 import { takeUntil } from "rxjs";
+import { AuthService } from "../../../service/auth.service";
+import { RouterModule } from "@angular/router";
 
 @Component({
   selector: "app-user",
   standalone: true,
-  imports: [CommonModule, SharedModule, GoogleSigninButtonModule],
+  imports: [CommonModule, RouterModule, SharedModule, GoogleSigninButtonModule],
   templateUrl: "./user.component.html",
   styleUrl: "./user.component.scss",
 })
@@ -36,44 +38,65 @@ export class UserComponent implements OnInit {
   private _userPanel!: TemplateRef<any>;
   user!: User | null;
   socialUser!: SocialUser;
-  loggedIn: boolean = false;
+  isUserValidated: boolean = false;
   private _overlayRef!: OverlayRef;
 
-  authService = inject(SocialAuthService);
+  socialAuthService = inject(SocialAuthService);
+  authService = inject(AuthService);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _overlay = inject(Overlay);
   private _viewContainerRef = inject(ViewContainerRef);
-  private appSettingService = inject(AppSettingService);
+  appSettingService = inject(AppSettingService);
 
   ngOnInit() {
     this.appSettingService.user$.subscribe((user) => {
+      this.isUserValidated = true;
       this.user = user;
       console.log("LoggedUser", user);
       this._changeDetectorRef.markForCheck();
     });
-    this.authService.authState.subscribe((user) => {
+    this.socialAuthService.authState.subscribe((user) => {
       console.log(
-        "🚀 ~ AppComponent ~ this.authService.authState.subscribe ~ user:",
+        "🚀 ~ AppComponent ~ this.socialAuthService.authState.subscribe ~ user:",
         user,
       );
       this.socialUser = user;
-      if (user)
-        this.appSettingService.user = { id: +user.id, email: user.email };
-      this.loggedIn = user != null;
+      if (user) this.signIn(user);
     });
   }
   closePanel() {}
   signInWithGoogle(): void {
-    this.authService
+    console.log("sinincallsed");
+    this.socialAuthService
       .signIn(GoogleLoginProvider.PROVIDER_ID)
       .then((x) => console.log(x));
   }
 
-  signIn() {}
+  signIn(data: SocialUser) {
+    const params: User = {
+      name: data.name,
+      email: data.email,
+      username: data.name,
+      photoUrl: data.photoUrl,
+      googleId: data.id,
+      googleToken: data.idToken,
+    };
+    this.authService.signInUser(params).subscribe(
+      (data) => {
+        console.log("Userdata", data);
+        this.appSettingService.user = data.user;
+        this.appSettingService.accessToken = data.user.token;
+      },
+      (err) => {
+        console.log("error", err);
+      },
+    );
+  }
   signOut() {
-    this.authService.signOut();
+    this.appSettingService.accessToken = "";
     this.appSettingService.removeLocalStoreUser();
-    this.appSettingService.getLocalStorageUser();
+    this.appSettingService.user = null;
+    this.socialAuthService.signOut();
   }
 
   // -----------------------------------------------------------------------------------------------------

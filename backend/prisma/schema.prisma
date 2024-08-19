@@ -33,13 +33,16 @@ model Video {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  username String?
-  name     String?
-  photoUrl String?
-  videos   Video[]
-  comment  Comment[]
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  username    String?
+  name        String?
+  photoUrl    String?
+  token       String?
+  googleId    String?
+  googleToken String?
+  videos      Video[]
+  comment     Comment[]
 }
 
 model Profile {

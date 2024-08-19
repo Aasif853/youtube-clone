@@ -1,14 +1,16 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, ReplaySubject } from "rxjs";
 import { User } from "../types/interfaces";
+import { CoolLocalStorage } from "angular2-cool-storage";
+import { LocalStorageService } from "./localstorage.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AppSettingService {
   public tokenName = "ng-token";
-
   private _user: ReplaySubject<User | null> = new ReplaySubject(1);
+  localStorage = inject(LocalStorageService);
   constructor() {
     this.getLocalStorageUser();
   }
@@ -24,10 +26,9 @@ export class AppSettingService {
    */
   set user(value: User | null) {
     // Store the value
-    if (value) {
-      this._user.next(value);
-      localStorage.setItem("userProfile", JSON.stringify(value));
-    } else this.removeLocalStoreUser();
+    this._user.next(value);
+    if (value) this.localStorage.setObject("userProfile", value);
+    else this.removeLocalStoreUser();
   }
 
   get user$(): Observable<User | null> {
@@ -38,25 +39,20 @@ export class AppSettingService {
    * Setter & getter for access token
    */
   set accessToken(token: string) {
-    localStorage.setItem(this.tokenName, token);
+    this.localStorage.setItem(this.tokenName, token);
   }
 
   get accessToken(): string {
-    return localStorage.getItem(this.tokenName) ?? "";
+    return this.localStorage.getItem(this.tokenName) ?? "";
   }
 
   removeLocalStoreUser() {
-    localStorage.removeItem("userProfile");
+    this.localStorage.removeItem("userProfile");
   }
-  /*
-   *  getLocalStorageUser function is used to get local user profile data.
-   */
+
   getLocalStorageUser(): void {
-    const user = localStorage.getItem("userProfile");
-    console.log("LoggedIn user from localstore", user);
-    if (user) {
-      this.user = JSON.parse(user);
-    }
+    const user = this.localStorage.getObject("userProfile") as User;
+    this.user = user && user.token ? user : null;
   }
 
   public queryStringFormat(queryParams: any) {
