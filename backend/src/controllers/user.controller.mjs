@@ -80,8 +80,8 @@ export const signUpUser = async (req, res) => {
     where: { email },
   });
   try {
-    const token = jwt.sign({ user: body }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+    const token = jwt.sign({ user: body }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     });
     if (user) {
       await prisma.user
