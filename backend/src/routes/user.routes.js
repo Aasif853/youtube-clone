@@ -1,23 +1,28 @@
 import { Router } from "express";
 import {
+  registerUser,
+  logoutUser,
+  signIpWithGoogle,
   createuser,
   getUsers,
   getUser,
   updateUser,
   deleteUser,
-  signUpUser,
-} from "../controllers/user.controller.mjs";
-import { checkSchema } from "express-validator";
-import { userValidator } from "../utils/user.validators.mjs";
-import { resolveUserById } from "../utils/helper.mjs";
+} from "../controllers/user.controller.js";
+import { upload } from "../middleware/multer.middleware.js";
+import verifyJWT from "../middleware/auth.middleware.js";
 const router = Router();
 
-router.route("/").get(getUsers).post(checkSchema(userValidator), createuser);
-router.route("/signUp").post(signUpUser);
+router.route("/register").post(upload.single("avatar"), registerUser);
+router.route("/google_sign_in").post(signIpWithGoogle);
+
+// secured routes
+router.route("/").get(getUsers).post(verifyJWT, createuser);
 router
   .route("/:id")
-  .get(resolveUserById, getUser)
-  .put(resolveUserById, updateUser)
-  .delete(resolveUserById, deleteUser);
+  .get(verifyJWT, getUser)
+  .put(verifyJWT, updateUser)
+  .delete(verifyJWT, deleteUser);
+router.route("/logout").post(verifyJWT, logoutUser);
 
 export default router;

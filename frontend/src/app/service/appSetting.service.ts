@@ -52,7 +52,7 @@ export class AppSettingService {
 
   getLocalStorageUser(): void {
     const user = this.localStorage.getObject("userProfile") as User;
-    this.user = user && user.token ? user : null;
+    this.user = user && user.refresh_token ? user : null;
   }
 
   public queryStringFormat(queryParams: any) {

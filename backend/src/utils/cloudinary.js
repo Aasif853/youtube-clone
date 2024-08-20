@@ -19,8 +19,7 @@ export const uploadToCloudinary = async (localFilePath) => {
       .catch((error) => {
         console.log(error);
       });
-
-    console.log("clouinady upload Response", uploadResult);
+    fs.unlinkSync(localFilePath);
     return uploadResult;
   } catch (err) {
     fs.unlinkSync(localFilePath);

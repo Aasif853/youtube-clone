@@ -1,0 +1,28 @@
+meta {
+  name: User Register
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/api/v1/users/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "name": "Mohammed Aasif",
+      "email": "mohammedaasif853@gmail.com",
+      "username": "Mohammed Aasif",
+      "avatar": "https://lh3.googleusercontent.com/a/ACg8ocJFU6avv5m8D2cmgWoGfOK1Ab6oyStM6Ht-3_06OhUJisVzT_9T=s96-c",
+      "googleId": "107026106673050090518"
+    }
+}
+
+body:multipart-form {
+  email: mohammedaasif8531@gmail.com
+  name: Mohammed Aaisf
+  username: aasif
+  avatar: @file(/Users/macos/Desktop/Screenshot 2024-08-09 at 2.18.48 PM.png)
+}

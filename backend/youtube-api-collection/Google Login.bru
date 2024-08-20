@@ -1,0 +1,18 @@
+meta {
+  name: Google Login 
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:3000/api/v1/users/google_sign_in
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "email": "mohammedaasif853@gmail.com",
+      "googleId": "107026106673050090518"
+    }
+}

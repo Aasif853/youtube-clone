@@ -1,4 +1,4 @@
-export class ApiRenponse {
+export default class ApiRenponse {
   constructor(statusCode, data, message = "Success") {
     this.statusCode = statusCode;
     this.data = data;

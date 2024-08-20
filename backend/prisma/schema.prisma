@@ -20,6 +20,7 @@ model User {
   name          String?
   avatar        String?
   refresh_token String?
+  access_token  String?
   google_id     String?
   google_token  String?
   videos        Video[]

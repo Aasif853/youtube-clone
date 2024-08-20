@@ -3,11 +3,10 @@ export interface User {
   email: string;
   name?: string;
   username?: string;
-  photoUrl?: string;
-  googleId?: string;
-  googleToken?: string;
-  token?: string;
-  videos?: Video[];
+  avatar?: string;
+  google_id?: string;
+  google_token?: string;
+  refresh_token?: string;
 }
 
 export interface Video {

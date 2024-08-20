@@ -1,8 +1,6 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import routes from "./routes/routes.js";
-
 const app = express();
 
 //cors for preventing malicious website to prevent access sensetive information.
@@ -20,6 +18,7 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+import routes from "./routes/routes.js";
 app.use("/api/v1/", routes);
 
 export default app;

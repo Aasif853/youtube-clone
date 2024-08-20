@@ -130,11 +130,11 @@ const videos = [
 
 async function main() {
   console.log(`Start seeding ...`);
-  for (const u of videos) {
-    const user = await prisma.video.create({
-      data: u,
+  for (const video of videos) {
+    const data = await prisma.video.create({
+      data: video,
     });
-    console.log(`Created video with id: ${user.id}`);
+    console.log(`Created video with id: ${data.id}`);
   }
   console.log(`Seeding finished.`);
 }

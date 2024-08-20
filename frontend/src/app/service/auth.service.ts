@@ -10,9 +10,9 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   signInUser(data: User): Observable<any> {
-    return this.http.post("users/signUp", data).pipe(
+    return this.http.post("users/google_sign_in", data).pipe(
       map((resp: any) => {
-        return resp;
+        return resp.data;
       }),
     );
   }
