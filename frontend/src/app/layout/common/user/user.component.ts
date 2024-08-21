@@ -78,14 +78,14 @@ export class UserComponent implements OnInit {
       email: data.email,
       username: data.name,
       avatar: data.photoUrl,
-      google_id: data.id,
-      google_token: data.idToken,
+      googleId: data.id,
+      googleToken: data.idToken,
     };
     this.authService.signInUser(params).subscribe(
       (userData) => {
         console.log("Userdata", userData);
         this.appSettingService.user = userData;
-        this.appSettingService.accessToken = userData.refresh_token;
+        this.appSettingService.accessToken = userData.accessToken;
       },
       (err) => {
         console.log("error", err);

@@ -4,9 +4,9 @@ export interface User {
   name?: string;
   username?: string;
   avatar?: string;
-  google_id?: string;
-  google_token?: string;
-  refresh_token?: string;
+  googleId?: string;
+  googleToken?: string;
+  refreshToken?: string;
 }
 
 export interface Video {

@@ -16,7 +16,7 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     const user = await prisma.user.findUnique({
-      // omit: { refresh_token: true },
+      // omit: { refreshToken: true },
       where: { id: decodedToken?.id },
     });
     console.log("requser", user);

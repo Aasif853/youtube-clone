@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "User" ADD COLUMN     "access_token" TEXT;
+ALTER TABLE "User" ADD COLUMN     "accessToken" TEXT;

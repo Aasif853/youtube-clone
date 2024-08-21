@@ -8,14 +8,14 @@ import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 const generateAndUpdateAccessAndRefreshToken = async (userData) => {
   try {
-    const refresh_token = jwt.sign(
-        { user_id: userData.id },
+    const refreshToken = jwt.sign(
+        { userId: userData.id },
         process.env.REFRESH_TOKEN_SECRET,
         {
           expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
         },
       ),
-      access_token = jwt.sign(
+      accessToken = jwt.sign(
         {
           id: userData.id,
           email: userData.email,
@@ -31,9 +31,9 @@ const generateAndUpdateAccessAndRefreshToken = async (userData) => {
 
     await prisma.user.update({
       where: { id: userData.id },
-      data: { refresh_token, access_token },
+      data: { refreshToken, accessToken },
     });
-    return { refresh_token, access_token };
+    return { refreshToken, accessToken };
   } catch (err) {
     throw new ApiError(500, "Something went wrong while generating token");
   }
@@ -42,7 +42,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 });
 export const signIpWithGoogle = asyncHandler(async (req, res) => {
-  const { name, email, username, avatar, google_id, google_token } = req.body;
+  const { name, email, username, avatar, googleId, googleToken } = req.body;
 
   if (!email) {
     throw new ApiError(400, "Email is required");
@@ -56,15 +56,15 @@ export const signIpWithGoogle = asyncHandler(async (req, res) => {
     username,
     name,
     avatar,
-    google_token,
-    google_id,
+    googleToken,
+    googleId,
   };
 
   let updatedUser;
   if (existingUser) {
     updatedUser = await prisma.user.update({
       where: { email: email },
-      data: { google_token, google_id },
+      data: { googleToken, googleId },
     });
   } else {
     // const avatarCloudinary = await uploadToCloudinary(body.avatar);
@@ -74,7 +74,7 @@ export const signIpWithGoogle = asyncHandler(async (req, res) => {
   }
 
   if (updatedUser) {
-    const { refresh_token, access_token } =
+    const { refreshToken, accessToken } =
       await generateAndUpdateAccessAndRefreshToken(existingUser);
 
     const options = {
@@ -83,12 +83,12 @@ export const signIpWithGoogle = asyncHandler(async (req, res) => {
     };
     res
       .status(200)
-      .cookie("accessToken", access_token, options)
-      .cookie("refreshToken", refresh_token, options)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
       .json(
         new ApiResponce(
           200,
-          { ...updatedUser, refresh_token, access_token },
+          { ...updatedUser, refreshToken, accessToken },
           "User signed in successfully",
         ),
       );
@@ -101,7 +101,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
   const id = req.user.id;
   const user = await prisma.user.update({
     where: { id },
-    data: { access_token: null, refresh_token: null },
+    data: { accessToken: null, refreshToken: null },
   });
   console.log("requser", user);
 
@@ -115,7 +115,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
 });
 
 export const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, username, avatar, google_id, google_token } = req.body;
+  const { name, email, username, avatar, googleId, googleToken } = req.body;
   const avatarLocalPath = req.file.path;
   console.log("req.files", req.file);
   if (!email) {
@@ -139,8 +139,8 @@ export const registerUser = asyncHandler(async (req, res) => {
         username,
         name,
         avatar: avatarLocalPath ? avatarCloudinary.url : avatar || "",
-        google_id,
-        google_token,
+        googleId,
+        googleToken,
       },
     })
     .then((userData) => {
@@ -155,6 +155,51 @@ export const registerUser = asyncHandler(async (req, res) => {
     });
 });
 
+export const refreshAccesToken = asyncHandler(async (req, res) => {
+  const incomingRefreshToken =
+    req.cookie?.refreshToken || req.body?.refreshToken;
+  if (!incomingRefreshToken) {
+    throw new ApiError(401, "Unauthorized request");
+  }
+
+  try {
+    const decodeToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET,
+    );
+
+    const user = await prisma.user.findUnique({
+      where: { id: decodeToken.id },
+    });
+
+    if (!user) throw new ApiError(401, "Invalid refresh token");
+
+    if (incomingRefreshToken !== user?.refreshToken) {
+      if (!user) throw new ApiError(401, "Refresh token is expired or used");
+    }
+
+    const { refreshToken, accessToken } =
+      await generateAndUpdateAccessAndRefreshToken(user);
+
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+    res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json(
+        new ApiResponce(
+          200,
+          { refreshToken, accessToken },
+          "Access token refreshed",
+        ),
+      );
+  } catch (err) {
+    throw new ApiError(401, err?.message || "Invalid refresh token");
+  }
+});
 export const getUsers = async (req, res) => {
   const allUser = await prisma.user.findMany();
   res.status(200).json({ data: allUser });

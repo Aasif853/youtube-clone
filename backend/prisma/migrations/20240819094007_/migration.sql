@@ -5,9 +5,9 @@ CREATE TABLE "User" (
     "username" TEXT,
     "name" TEXT,
     "avatar" TEXT,
-    "refresh_token" TEXT,
-    "google_id" TEXT,
-    "google_token" TEXT,
+    "refreshToken" TEXT,
+    "googleId" TEXT,
+    "googleToken" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -26,7 +26,7 @@ CREATE TABLE "Video" (
     "likes" INTEGER DEFAULT 0,
     "duration" TEXT,
     "isPublished" BOOLEAN NOT NULL DEFAULT false,
-    "user_id" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -36,8 +36,8 @@ CREATE TABLE "Video" (
 -- CreateTable
 CREATE TABLE "WatchHistory" (
     "id" SERIAL NOT NULL,
-    "user_id" INTEGER NOT NULL,
-    "video_id" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "videoId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -46,24 +46,24 @@ CREATE TABLE "WatchHistory" (
 
 -- CreateTable
 CREATE TABLE "Comment" (
-    "_id" TEXT NOT NULL,
+    "Id" TEXT NOT NULL,
     "text" TEXT NOT NULL,
-    "user_id" INTEGER NOT NULL,
-    "video_id" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "videoId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Comment_pkey" PRIMARY KEY ("_id")
+    CONSTRAINT "Comment_pkey" PRIMARY KEY ("Id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
-ALTER TABLE "Video" ADD CONSTRAINT "Video_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Video" ADD CONSTRAINT "Video_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Comment" ADD CONSTRAINT "Comment_video_id_fkey" FOREIGN KEY ("video_id") REFERENCES "Video"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES "Video"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -3,6 +3,7 @@ import {
   registerUser,
   logoutUser,
   signIpWithGoogle,
+  refreshAccesToken,
   createuser,
   getUsers,
   getUser,
@@ -15,6 +16,7 @@ const router = Router();
 
 router.route("/register").post(upload.single("avatar"), registerUser);
 router.route("/google_sign_in").post(signIpWithGoogle);
+router.route("/refresh-token").post(refreshAccesToken);
 
 // secured routes
 router.route("/").get(getUsers).post(verifyJWT, createuser);

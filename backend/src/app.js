@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const app = express();
+import path from "path";
 
 //cors for preventing malicious website to prevent access sensetive information.
 app.use(
@@ -20,5 +21,9 @@ app.use(cookieParser());
 
 import routes from "./routes/routes.js";
 app.use("/api/v1/", routes);
+app.use("/", (req, res) => {
+  console.log("asdf", path);
+  res.sendStatus(200);
+});
 
 export default app;

@@ -11,7 +11,7 @@ const videos = [
     //   'https://yt3.googleusercontent.com/UlKrbeZ4Xz79DUbEbF3FvC0FQ4A_cvpIIzhJQ_wigP8CL_Xf_WF-ryYrrtGpqpD9WzAplsUz=s176-c-k-c0x00ffffff-no-rj',
     title: "ImNotGoodEnough.js",
     views: 1000,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -21,7 +21,7 @@ const videos = [
     //   'https://yt3.googleusercontent.com/tWGVfHXn5SaAsw-7livA-p-Db6VrWKtLESCqIaR0Gw6cMN47dhUWt3nMPYcoF7ueZBDsUq4atg=s176-c-k-c0x00ffffff-no-rj',
     title: "Photoshopping YOUR Drawings! | Realistified! S1E3",
     views: 21212,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -31,7 +31,7 @@ const videos = [
     //   'https://yt3.googleusercontent.com/ytc/AOPolaS101j27Disa_BYArytv-hXMRl8wNMtqZMTkrfH=s176-c-k-c0x00ffffff-no-rj',
     title: "I Challenged The CSS King To A CSS Battle",
     views: 5,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -41,7 +41,7 @@ const videos = [
     //   'https://yt3.googleusercontent.com/okRlBwXJN68DuPhHs_AaMlOHVwfnHWEL7is5lV3RTyYlJSDvOy58-q-OyCm5bSOU71csOHyaKQ=s176-c-k-c0x00ffffff-no-rj',
     title: "VFX Artists React to Bad & Great CGi 9",
     views: 5,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -52,7 +52,7 @@ const videos = [
     title:
       "Wednesday Playing Cello Theme | Paint It Black - The Rolling Stones (Episode 1 Soundtrack Netflix)",
     views: 5,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -62,7 +62,7 @@ const videos = [
     //   'https://yt3.googleusercontent.com/ytc/AOPolaSe-ifBRtdfb67uDM8kaHdhdPdQny-MaSRdBfT2NA=s176-c-k-c0x00ffffff-no-rj',
     title: "$456,000 Squid Game In Real Life!",
     views: 2323,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -72,7 +72,7 @@ const videos = [
     //   'https://yt3.googleusercontent.com/enyLBm1Sy8mVRXJJLWHT2z64nqxJGt2g61A9xnxpUjO2YAUovHaY_JT3rnAg0j6Qij9iaHQlAg=s176-c-k-c0x00ffffff-no-rj',
     title: "Nothing Phone (2) Impressions ft Nothing CEO!",
     views: 5,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -83,7 +83,7 @@ const videos = [
     title:
       "Incredible Hidden Details in Spider-Man: Across The Spider-Verse (Part 3)",
     views: 5234,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -93,7 +93,7 @@ const videos = [
     //   'https://yt3.googleusercontent.com/HB-lIXnCINyWJY17l3UppuluNz_pc4uxv9KhtZuGJSjEjcByODmpqb1I9B2Tv5UUCywdolWaveg=s176-c-k-c0x00ffffff-no-rj',
     title: "Can I Build a SHIPWRECK in ROBLOX?! | Theme Park Tycoon 2 • #38",
     views: 978,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -103,7 +103,7 @@ const videos = [
     //   'https://yt3.ggpht.com/9QBOD8JbiG7_HHZj7TUOtTriUcAefAWxtBRaun832mE4y_OCzIcLq8Lf_3yWshHiwPePhPznTQ=s88-c-k-c0x00ffffff-no-rj',
     title: "Loki Theme | EPIC GLORIOUS VERSION (Loki Soundtrack Cover)",
     views: 5,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -114,7 +114,7 @@ const videos = [
     title:
       "The Joy of CSS Grid - Build 3 Beautifully Simple Responsive Layouts",
     views: 543,
-    user_id: 1,
+    userId: 1,
   },
   {
     thumbnail:
@@ -124,7 +124,7 @@ const videos = [
     //   'https://yt3.googleusercontent.com/ytc/AOPolaRHeytO1y7AbKLw3UyJFoIAMydxKNnuz2Y-gVi4iw=s176-c-k-c0x00ffffff-no-rj',
     title: "MINOTAUR'S MOST SAVAGE FIGHTS! | BattleBots",
     views: 5,
-    user_id: 1,
+    userId: 1,
   },
 ];
 
