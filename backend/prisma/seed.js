@@ -12,6 +12,7 @@ const videos = [
     title: "ImNotGoodEnough.js",
     views: 1000,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -22,6 +23,7 @@ const videos = [
     title: "Photoshopping YOUR Drawings! | Realistified! S1E3",
     views: 21212,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -32,6 +34,7 @@ const videos = [
     title: "I Challenged The CSS King To A CSS Battle",
     views: 5,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -42,6 +45,7 @@ const videos = [
     title: "VFX Artists React to Bad & Great CGi 9",
     views: 5,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -53,6 +57,7 @@ const videos = [
       "Wednesday Playing Cello Theme | Paint It Black - The Rolling Stones (Episode 1 Soundtrack Netflix)",
     views: 5,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -63,6 +68,7 @@ const videos = [
     title: "$456,000 Squid Game In Real Life!",
     views: 2323,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -73,6 +79,7 @@ const videos = [
     title: "Nothing Phone (2) Impressions ft Nothing CEO!",
     views: 5,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -84,6 +91,7 @@ const videos = [
       "Incredible Hidden Details in Spider-Man: Across The Spider-Verse (Part 3)",
     views: 5234,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -94,6 +102,7 @@ const videos = [
     title: "Can I Build a SHIPWRECK in ROBLOX?! | Theme Park Tycoon 2 • #38",
     views: 978,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -104,6 +113,7 @@ const videos = [
     title: "Loki Theme | EPIC GLORIOUS VERSION (Loki Soundtrack Cover)",
     views: 5,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -115,6 +125,7 @@ const videos = [
       "The Joy of CSS Grid - Build 3 Beautifully Simple Responsive Layouts",
     views: 543,
     userId: 1,
+    channelId: 1,
   },
   {
     thumbnail:
@@ -125,6 +136,7 @@ const videos = [
     title: "MINOTAUR'S MOST SAVAGE FIGHTS! | BattleBots",
     views: 5,
     userId: 1,
+    channelId: 1,
   },
 ];
 

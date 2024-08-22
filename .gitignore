@@ -44,5 +44,7 @@ testem.log
 Thumbs.db
 
 
+/frontend/dist
+
 # Environment
 /frontend/src/environments

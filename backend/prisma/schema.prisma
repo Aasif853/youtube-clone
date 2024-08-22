@@ -14,8 +14,8 @@ datasource db {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  email        String    @unique
+  id           String         @id @default(uuid())
+  email        String         @unique
   username     String?
   name         String?
   avatar       String?
@@ -23,29 +23,31 @@ model User {
   accessToken  String?
   googleId     String?
   googleToken  String?
-  channelId    Int
+  channelId    String?
   Channel      Channel?
   comment      Comment[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Subscription Subscription[]
 }
 
 model Channel {
-  id          Int      @id @default(autoincrement())
-  userId      Int      @unique
-  email       String
-  title       String
-  description String?
-  avatar      String?
-  coverImage  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  Video       Video[]
-  User        User     @relation(fields: [userId], references: [id])
+  id           String         @id @default(uuid())
+  userId       String         @unique
+  email        String
+  title        String
+  description  String?
+  avatar       String?
+  coverImage   String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Video        Video[]
+  User         User           @relation(fields: [userId], references: [id])
+  Subscription Subscription[]
 }
 
 model Video {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   title       String    @db.VarChar(255)
   description String?
   thumbnail   String?
@@ -55,18 +57,28 @@ model Video {
   likes       Int?      @default(0)
   duration    String?
   isPublished Boolean   @default(false)
-  userId      Int?
-  channelId   Int
+  userId      String
+  channelId   String
   channel     Channel   @relation(fields: [channelId], references: [id])
   comment     Comment[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
 
+model Subscription {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  channelId  String
+  subscriber User     @relation(fields: [userId], references: [id])
+  channel    Channel  @relation(fields: [channelId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 model WatchHistory {
   id        Int      @id @default(autoincrement())
-  userId    Int
-  videoId   Int
+  userId    String
+  videoId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -74,8 +86,8 @@ model WatchHistory {
 model Comment {
   id        String   @id @default(uuid()) @map("Id")
   text      String
-  userId    Int
-  videoId   Int
+  userId    String
+  videoId   String
   user      User     @relation(fields: [userId], references: [id])
   video     Video    @relation(fields: [videoId], references: [id])
   createdAt DateTime @default(now())

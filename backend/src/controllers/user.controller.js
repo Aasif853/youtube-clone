@@ -71,6 +71,22 @@ export const signIpWithGoogle = asyncHandler(async (req, res) => {
     updatedUser = await prisma.user.create({
       data: body,
     });
+    // create channel for the user
+    await prisma.channel
+      .create({
+        data: {
+          userId: updatedUser.id,
+          email: updatedUser.email,
+          title: updatedUser.name,
+          avatar: updatedUser.avatar,
+        },
+      })
+      .then(async (data) => {
+        await prisma.user.update({
+          where: { id: userId },
+          data: { channelId: data.id },
+        });
+      });
   }
 
   if (updatedUser) {
@@ -116,7 +132,7 @@ export const logoutUser = asyncHandler(async (req, res) => {
 
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, username, avatar, googleId, googleToken } = req.body;
-  const avatarLocalPath = req.file.path;
+  const avatarLocalPath = req.file?.path;
   console.log("req.files", req.file);
   if (!email) {
     throw new ApiError(400, "Email is required");
@@ -131,7 +147,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "Email already exist");
   }
 
-  const avatarCloudinary = await uploadToCloudinary(avatarLocalPath || avatar);
+  // const avatarCloudinary = await uploadToCloudinary(avatarLocalPath || avatar);
   await prisma.user
     .create({
       data: {
@@ -143,8 +159,10 @@ export const registerUser = asyncHandler(async (req, res) => {
         googleToken,
       },
     })
-    .then((userData) => {
-      console.log("🚀 ~ createuser ~ userData:", userData);
+    .then(async (userData) => {
+      const channel = await createChannelForUser(userData);
+      console.log("🚀 ~ createuser ~ userData:", channel);
+
       return res
         .status(201)
         .json(new ApiResponce(201, userData, "User register successfully"));
@@ -200,6 +218,53 @@ export const refreshAccesToken = asyncHandler(async (req, res) => {
     throw new ApiError(401, err?.message || "Invalid refresh token");
   }
 });
+
+export const getCurrentUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponce(200, req.user, "Current user fetched successfully"));
+});
+export const updateUserDetails = asyncHandler(async (req, res) => {
+  const { username, name } = req.body;
+
+  if (!(username || name)) {
+    throw new ApiError(400, "All fields are required");
+  }
+  const user = await prisma.user.update({
+    where: { id: req.user?.id },
+    data: { username, email },
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponce(200, user, "User details updated successfully"));
+});
+
+export const updateUserAvatar = asyncHandler(async (req, res) => {
+  const avatarLocalPath = req.file.path;
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar is required");
+  }
+
+  const avatar = await uploadToCloudinary(avatarLocalPath);
+
+  if (!avatar?.url) {
+    throw new ApiError(400, "Error while uploading avatar");
+  }
+
+  const user = await prisma.user.update({
+    where: { id: req.user?.id },
+    data: { avatar: avatar.url },
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponce(200, user, "Avatar uploaded successfully"));
+});
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const user = await prisma.user.findUnique({ where: { id: req.user?.id } });
+});
 export const getUsers = async (req, res) => {
   const allUser = await prisma.user.findMany();
   res.status(200).json({ data: allUser });
@@ -244,19 +309,6 @@ export const getUser = async (req, res) => {
   res.status(200).send({ data: user });
 };
 
-export const updateUser = async (req, res) => {
-  const { body, user } = req;
-
-  prisma.user
-    .update({ where: { id: user.id }, data: body })
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((err) => {
-      res.sendStatus(400);
-    });
-};
-
 export const deleteUser = async (req, res) => {
   prisma.user
     .delete({ where: { id: req.user.id } })
@@ -264,4 +316,23 @@ export const deleteUser = async (req, res) => {
       res.sendStatus(200);
     })
     .catch((err) => res.sendStatus(400));
+};
+
+const createChannelForUser = async (user) => {
+  return await prisma.channel
+    .create({
+      data: {
+        userId: user.id,
+        email: user.email,
+        title: user.name,
+        avatar: user.avatar,
+      },
+    })
+    .then(async (data) => {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { channelId: data.id },
+      });
+      return data;
+    });
 };

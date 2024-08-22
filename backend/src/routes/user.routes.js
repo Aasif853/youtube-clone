@@ -4,10 +4,12 @@ import {
   logoutUser,
   signIpWithGoogle,
   refreshAccesToken,
+  getCurrentUser,
+  updateUserDetails,
+  updateUserAvatar,
   createuser,
   getUsers,
   getUser,
-  updateUser,
   deleteUser,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
@@ -19,11 +21,13 @@ router.route("/google_sign_in").post(signIpWithGoogle);
 router.route("/refresh-token").post(refreshAccesToken);
 
 // secured routes
+router.route("/getCurrentUser").get(verifyJWT, getCurrentUser);
+router.route("/udpateAvatar").put(verifyJWT, updateUserAvatar);
 router.route("/").get(getUsers).post(verifyJWT, createuser);
 router
   .route("/:id")
   .get(verifyJWT, getUser)
-  .put(verifyJWT, updateUser)
+  .put(verifyJWT, updateUserDetails)
   .delete(verifyJWT, deleteUser);
 router.route("/logout").post(verifyJWT, logoutUser);
 
