@@ -1,8 +1,4 @@
-import {
-  CommonModule,
-  NgOptimizedImage,
-  provideImgixLoader,
-} from "@angular/common";
+import { NgOptimizedImage, provideImgixLoader } from "@angular/common";
 import { Component, Input } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { environment } from "../../../../environments/environment";
@@ -10,7 +6,7 @@ import { environment } from "../../../../environments/environment";
 @Component({
   selector: "app-card",
   standalone: true,
-  imports: [CommonModule, RouterModule, NgOptimizedImage],
+  imports: [RouterModule, NgOptimizedImage],
   providers: [provideImgixLoader(environment.mediaUrl)],
   templateUrl: "./card.component.html",
   styleUrl: "./card.component.scss",

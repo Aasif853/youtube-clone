@@ -6,16 +6,20 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadToCloudinary = async (localFilePath) => {
+export const uploadToCloudinary = async (localFilePath, folderName = "") => {
   try {
     if (!localFilePath) return null;
 
     // upload the file on cloudinary
+    const options = {
+      resource_type: "auto",
+    };
 
+    if (folderName) {
+      options["folder"] = folderName;
+    }
     const uploadResult = await cloudinary.uploader
-      .upload(localFilePath, {
-        resource_type: "auto",
-      })
+      .upload(localFilePath, options)
       .catch((error) => {
         console.log(error);
       });

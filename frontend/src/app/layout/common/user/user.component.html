@@ -1,74 +1,70 @@
-<ng-template #googleButton>
-  <asl-google-signin-button
-    *ngIf="isUserValidated && !user"
-    class="profile-icon"
-    type="standard"
-    theme="filled_black"
-    size="medium"
-  ></asl-google-signin-button>
-</ng-template>
-
-<button
-  *ngIf="user; else googleButton"
-  class="profile-icon"
-  tabindex="0"
-  (click)="openPanel()"
-  #userOrigin
->
-  <span class="profile-pic">
-    <img [src]="user.avatar" alt="Profile" />
-  </span>
-  <span class="arrow-down-icon">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="lucide lucide-chevron-down"
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  </span>
-</button>
+@if (user) {
+  <button class="profile-icon" tabindex="0" (click)="openPanel()" #userOrigin>
+    <span class="profile-pic">
+      <img [src]="user.avatar" alt="Profile" />
+    </span>
+    <span class="arrow-down-icon">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-chevron-down"
+      >
+        <path d="m6 9 6 6 6-6" />
+      </svg>
+    </span>
+  </button>
+} @else {
+  @if (isUserValidated && !user) {
+    <asl-google-signin-button
+      class="profile-icon"
+      type="standard"
+      theme="filled_black"
+      size="medium"
+    ></asl-google-signin-button>
+  }
+}
 
 <ng-template #userPanel>
-  <div
-    *ngIf="user"
-    class="profile-card fixed inset-0 sm:static min-w-90 sm:inset-auto flex flex-col sm:min-w-90 sm:w-90 sm:rounded-2xl overflow-hidden shadow-lg"
-  >
-    <!-- Header -->
-    <div class="flex shrink-0 px-3 pt-3">
-      <div class="channel">
-        <div class="profile-pic">
-          <img [src]="user.avatar" alt="profile" />
-        </div>
-        <div>
-          <span class="channel-name">
-            {{ user.name }}
-            <span class="verified">
-              <svg viewBox="0 0 24 24" focusable="false">
-                <path
-                  d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z"
-                ></path>
-              </svg>
-            </span>
-          </span>
-          <span class="user-email">{{ user.email }} </span>
-        </div>
-      </div>
-    </div>
-    <hr />
-    <!-- Content -->
+  @if (user) {
     <div
-      class="relative w-full flex flex-col flex-auto sm:max-h-120 overflow-y-auto"
+      class="profile-card fixed inset-0 sm:static min-w-90 sm:inset-auto flex flex-col sm:min-w-90 sm:w-90 sm:rounded-2xl overflow-hidden shadow-lg"
     >
-      <div class="flex flex-col flex-auto sm:justify-start">
-        <div class="action-item" [routerLink]="['channel', 1]">Channel</div>
-        <div class="action-item" routerLink="/profile">Profile</div>
-        <div class="action-item" routerLink="/channel">Settings</div>
-        <hr />
-        <div class="action-item" (click)="signOut()">Logout</div>
+      <!-- Header -->
+      <div class="flex shrink-0 px-3 pt-3">
+        <div class="channel">
+          <div class="profile-pic">
+            <img [src]="user.avatar" alt="profile" />
+          </div>
+          <div>
+            <span class="channel-name">
+              {{ user.name }}
+              <span class="verified">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path
+                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z"
+                  ></path>
+                </svg>
+              </span>
+            </span>
+            <span class="user-email">{{ user.email }} </span>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <!-- Content -->
+      <div
+        class="relative w-full flex flex-col flex-auto sm:max-h-120 overflow-y-auto"
+      >
+        <div class="flex flex-col flex-auto sm:justify-start">
+          <div class="action-item" [routerLink]="['channel', 1]">Channel</div>
+          <div class="action-item" routerLink="/profile">Profile</div>
+          <div class="action-item" routerLink="/channel">Settings</div>
+          <hr />
+          <div class="action-item" (click)="signOut()">Logout</div>
+        </div>
       </div>
     </div>
-  </div>
+  }
 </ng-template>

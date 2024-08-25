@@ -1,16 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CardComponent } from '../../layout/common/card/card.component';
-import { VideoService } from '../../service/video.service';
-import { CommonModule } from '@angular/common';
-import { CategoryComponent } from '../../layout/common/category/category.component';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject, OnInit } from "@angular/core";
+import { VideoService } from "../../service/video.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
-  selector: 'app-listing',
+  selector: "app-listing",
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './watch.component.html',
-  styleUrl: './watch.component.scss',
+  imports: [],
+  templateUrl: "./watch.component.html",
+  styleUrl: "./watch.component.scss",
 })
 export class WatchComponent implements OnInit {
   video: any = {};
@@ -20,7 +17,7 @@ export class WatchComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((route) => {
-      this.videoId = route['id'];
+      this.videoId = route["id"];
       if (this.videoId) {
         this.getVideo();
       }

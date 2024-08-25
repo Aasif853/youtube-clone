@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import {
   AfterViewInit,
   Component,
@@ -13,7 +13,7 @@ import {
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   selector: "infinite-scroll",
   template: `<ng-content></ng-content>
     <div #anchor></div>`,

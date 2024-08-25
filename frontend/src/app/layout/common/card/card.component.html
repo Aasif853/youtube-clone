@@ -1,40 +1,41 @@
-<div class="card" *ngIf="video">
+@if (video) {
+  <div class="card">
     <div class="thumbnail" [routerLink]="['/watch', video.id]">
-        <img [ngSrc]="video.thumbnail" fill alt="Thumbnail" />
-        <div class="duration">{{ video.duration }}</div>
+      <img [ngSrc]="video.thumbnail" fill alt="Thumbnail" />
+      <div class="duration">{{ video.duration }}</div>
     </div>
     <div class="content">
-        <div class="profile-pic">
-            <img
-                ngSrc="'https://yt3.googleusercontent.com/UlKrbeZ4Xz79DUbEbF3FvC0FQ4A_cvpIIzhJQ_wigP8CL_Xf_WF-ryYrrtGpqpD9WzAplsUz=s176-c-k-c0x00ffffff-no-rj'"
-                fill
-                alt="profile"
-            />
-        </div>
-        <span class="title">{{ video.title }}</span>
-        <span class="channel-name cursor-pointer" [routerLink]="['channel', 1]"
-            >Hyperplexed
-            <span class="verified">
-                <svg viewBox="0 0 24 24" focusable="false">
-                    <path
-                        d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z"
-                    ></path>
-                </svg>
-            </span>
+      <div class="profile-pic">
+        <img
+          ngSrc="'https://yt3.googleusercontent.com/UlKrbeZ4Xz79DUbEbF3FvC0FQ4A_cvpIIzhJQ_wigP8CL_Xf_WF-ryYrrtGpqpD9WzAplsUz=s176-c-k-c0x00ffffff-no-rj'"
+          fill
+          alt="profile"
+        />
+      </div>
+      <span class="title">{{ video.title }}</span>
+      <span class="channel-name cursor-pointer" [routerLink]="['channel', 1]"
+        >Hyperplexed
+        <span class="verified">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path
+              d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z"
+            ></path>
+          </svg>
         </span>
-        <span class="views"
-            >{{ video.views }} views .
-            <span class="time">2 months ago</span></span
-        >
+      </span>
+      <span class="views"
+        >{{ video.views }} views . <span class="time">2 months ago</span></span
+      >
     </div>
-</div>
-
-<div class="card" *ngIf="!video">
+  </div>
+} @else {
+  <div class="card">
     <div class="thumbnail skeleton"></div>
     <div class="content">
-        <div class="profile-pic skeleton"></div>
-        <span class="title skeleton skeleton-text"></span>
-        <span class="channel-name skeleton skeleton-text"></span>
-        <span class="views skeleton skeleton-text"></span>
+      <div class="profile-pic skeleton"></div>
+      <span class="title skeleton skeleton-text"></span>
+      <span class="channel-name skeleton skeleton-text"></span>
+      <span class="views skeleton skeleton-text"></span>
     </div>
-</div>
+  </div>
+}

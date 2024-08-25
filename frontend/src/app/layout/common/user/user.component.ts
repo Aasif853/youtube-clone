@@ -18,7 +18,7 @@ import {
 import { MatButton } from "@angular/material/button";
 import { Overlay, OverlayRef } from "@angular/cdk/overlay";
 import { TemplatePortal } from "@angular/cdk/portal";
-import { CommonModule } from "@angular/common";
+
 import { User } from "../../../types/interfaces";
 import { AppSettingService } from "../../../service/appSetting.service";
 import { takeUntil } from "rxjs";
@@ -28,7 +28,7 @@ import { RouterModule } from "@angular/router";
 @Component({
   selector: "app-user",
   standalone: true,
-  imports: [CommonModule, RouterModule, SharedModule, GoogleSigninButtonModule],
+  imports: [RouterModule, SharedModule, GoogleSigninButtonModule],
   templateUrl: "./user.component.html",
   styleUrl: "./user.component.scss",
 })

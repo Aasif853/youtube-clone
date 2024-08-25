@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { CardComponent } from "../../layout/common/card/card.component";
 import { VideoService } from "../../service/video.service";
-import { CommonModule } from "@angular/common";
+
 import { CategoryComponent } from "../../layout/common/category/category.component";
 import { BehaviorSubject, combineLatest, Subscription } from "rxjs";
 import {
@@ -17,11 +17,10 @@ import { InfiniteScrollComponent } from "../../shared/infinit-scroll.component";
   selector: "app-listing",
   standalone: true,
   imports: [
-    CommonModule,
     InfiniteScrollComponent,
     CardComponent,
-    CategoryComponent,
-  ],
+    CategoryComponent
+],
   templateUrl: "./listing.component.html",
   styleUrl: "./listing.component.scss",
 })

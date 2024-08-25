@@ -4,7 +4,6 @@ import cookieParser from "cookie-parser";
 const app = express();
 import path from "path";
 const __dirname = path.resolve();
-
 //cors for preventing malicious website to prevent access sensetive information.
 app.use(
   cors({

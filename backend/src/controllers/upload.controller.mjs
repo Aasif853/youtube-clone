@@ -1,125 +1,117 @@
 import AWS from "aws-sdk";
-
 import fs from "fs";
+import path from "path";
 import { addVideoDetailsToDB } from "./video.controllers.mjs";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import ApiError from "../utils/ApiError.js";
+import ApiResponce from "../utils/ApiResponce.js";
+import { v4 as uuidv4 } from "uuid";
 
-AWS.config.update({
-  region: process.env.S3_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEYId,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-});
-const storage = new AWS.S3();
+let videoUploads = {};
+export const initializeUpload = asyncHandler(async (req, res) => {
+  const { fileName, fileSize, totalChunks } = req.body;
 
-export const uploadFileToS3 = async (req, res) => {
-  console.log("🚀 ~ uploadFileToS3 ~ req:", req.file);
-
-  if (!req.file) return res.status(400).send("No file received");
-
-  const file = req.file;
-
-  const params = {
-    Bucket: process.env.AWS_BUCKET,
-    Key: file.originalname,
-    Body: file.buffer,
-  };
-
-  storage.upload(params, (err, data) => {
-    if (err) {
-      console.log("🚀 ~ s3.upload ~ err:", err);
-      res.status(400).send("File cannot be upload");
-    } else {
-      console.log("🚀 ~ s3.upload ~ data:", data);
-      res.status(200).send("File upload successfully");
-    }
-  });
-  //   res.json(req.file);
-};
-
-export const multiPartUploadToS3 = async (req, res) => {
-  const filePath = "/Users/macos/Downloads/MP4 1280 10MG.mp4";
-
-  if (!fs.existsSync(filePath)) res.status(400).send("File does not exist");
-
-  const file = fs.statSync(filePath);
-  console.log("🚀 ~ multiPartUploadToS3 ~ file:", file.size);
-
-  const uploadParams = {
-    Bucket: process.env.AWS_BUCKET,
-    Key: "trial-key1",
-    // ACL: 'public-read',
-    ContentType: "video/mp4",
-  };
-  try {
-    const multiPartParams = await storage
-      .createMultipartUpload(uploadParams)
-      .promise();
-    console.log("🚀 ~ multiPartUploadToS3 ~ multiPartParams:", multiPartParams);
-
-    const fileSize = file.size,
-      chunSize = 10 * 1024 * 1024; // 10 MB
-    const numberOfParts = Math.ceil(fileSize / chunSize);
-
-    const uploadedETags = [];
-    for (let chunkPart = 0; chunkPart < numberOfParts; chunkPart++) {
-      const start = chunkPart * chunSize,
-        end = Math.min(start + chunSize, fileSize);
-      const partParams = {
-        Bucket: uploadParams.Bucket,
-        Key: uploadParams.Key,
-        UploadId: multiPartParams.UploadId,
-        PartNumber: chunkPart + 1,
-        Body: fs.createReadStream(filePath, { start, end }),
-        ContentLength: end - start,
-      };
-
-      const data = await storage.uploadPart(partParams).promise();
-      console.log(
-        "🚀 ~ multiPartUploadToS3 ~ data:",
-        partParams.PartNumber,
-        data.ETag,
-      );
-      uploadedETags.push({
-        PartNumber: uploadedETags.PartNumber,
-        ETag: data.ETag,
-      });
-    }
-    const completeParams = {
-      Bucket: uploadParams.Bucket,
-      Key: uploadParams.Key,
-      UploadId: multiPartParams.UploadId,
-      //   MultipartUpload: { Parts: uploadedETags },
-    };
-    const data = await storage.listParts(completeParams).promise();
-    const parts = data.Parts.map((part) => ({
-      ETag: part.ETag,
-      PartNumber: part.PartNumber,
-    }));
-
-    completeParams.MultipartUpload = {
-      Parts: parts,
-    };
-    const completeRes = await storage
-      .completeMultipartUpload(completeParams)
-      .promise();
-    console.log("🚀 ~ multiPartUploadToS3 ~ completeRes:", completeRes);
-    const videoParam = {
-      title: "test 1",
-      description: "asdasdf",
-      url: completeRes.Location,
-      thumbnail: "asdfasdf",
-      userId: "6fd6b37a-d3b5-4505-9a9f-6e2f7e933ecf",
-    };
-    try {
-      const videoData = await addVideoDetailsToDB(videoParam);
-      res.status(200).send("File Uploaded Successfully");
-    } catch (err) {
-      console.log("🚀 ~ createuser ~ err:", err);
-      res.status(400);
-      return res.status(400).send(err);
-    }
-  } catch (err) {
-    console.log("🚀 ~ multiPartUploadToS3 ~ err:", err);
-
-    res.sendStatus(400);
+  if (!fileName || !fileSize || !totalChunks) {
+    return res.status(400).json(new ApiError(400, "Invalid  request data"));
   }
-};
+
+  const uploadId = uuidv4();
+  videoUploads[uploadId] = {
+    fileName,
+    fileSize,
+    totalChunks,
+    uploadedChunks: 0,
+    chunks: [],
+  };
+
+  res
+    .status(200)
+    .json(new ApiResponce(200, { uploadId }, "Uploading chunk initiated"));
+});
+export const uploadChunk = asyncHandler(async (req, res) => {
+  const { uploadId, chunkIndex } = req.body;
+  const chunkData = req.files.chunkData;
+
+  if (!uploadId || chunkIndex === undefined || !chunkData) {
+    return res.status(400).json({ message: "Invalid request data" });
+  }
+
+  if (!videoUploads[uploadId]) {
+    return res.status(404).json({ message: "Upload session not found" });
+  }
+
+  const chunkDir = path.join(__dirname, "public/uploads", uploadId);
+  if (!fs.existsSync(chunkDir)) {
+    fs.mkdirSync(chunkDir, { recursive: true });
+  }
+
+  const chunkPath = path.join(chunkDir, `chunk_${chunkIndex}`);
+  chunkData.mv(chunkPath, (err) => {
+    if (err) {
+      return res.status(500).json(new ApiError(500, "Error saving chunk", err));
+    }
+
+    videoUploads[uploadId].chunks.push(chunkIndex);
+    videoUploads[uploadId].uploadedChunks += 1;
+
+    res
+      .status(200)
+      .json(new ApiResponce(200, {}, "Chunk uploaded successfully"));
+  });
+});
+export const completeUpload = asyncHandler(async (req, res) => {
+  const { uploadId } = req.body;
+
+  if (!uploadId || !videoUploads[uploadId]) {
+    return res.status(400).json(new ApiError(400, "Invalid upload session"));
+  }
+
+  const uploadData = videoUploads[uploadId];
+
+  if (uploadData.uploadedChunks !== uploadData.totalChunks) {
+    return res
+      .status(400)
+      .json(new ApiError(400, "Not all chunks have been uploaded"));
+  }
+
+  const chunkDir = path.join(__dirname, "public/uploads", uploadId);
+  const finalFilePath = path.join(
+    __dirname,
+    "public/uploads",
+    `${uploadData.fileName}`,
+  );
+
+  // Merge chunks
+  const chunkFiles = Array.from(
+    { length: uploadData.totalChunks },
+    (_, i) => `chunk_${i}`,
+  ).map((f) => path.join(chunkDir, f));
+  const writeStream = fs.createWriteStream(finalFilePath);
+
+  chunkFiles.forEach((chunk) => {
+    const data = fs.readFileSync(chunk);
+    writeStream.write(data);
+  });
+
+  writeStream.end();
+
+  // Convert to HLS using FFmpeg (assumed installed)
+  const hlsDir = path.join(__dirname, "uploads", "hls", uploadId);
+  fs.mkdirSync(hlsDir, { recursive: true });
+  const command = `ffmpeg -i ${finalFilePath} -hls_time 10 -hls_list_size 0 -f hls ${path.join(hlsDir, "output.m3u8")}`;
+
+  exec(command, (err, stdout, stderr) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ message: "Error converting video to HLS", error: err });
+    }
+
+    // Cleanup and return the HLS path
+    delete videoUploads[uploadId];
+    res.status(200).json({
+      message: "Upload complete and HLS generated",
+      hlsPath: `/uploads/hls/${uploadId}/output.m3u8`,
+    });
+  });
+});
