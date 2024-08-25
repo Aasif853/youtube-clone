@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { body } from "express-validator";
 import {
   initializeUpload,
   uploadChunk,
@@ -10,8 +9,8 @@ const upload = multer();
 
 const router = Router();
 
-router.post("/initialize", uploadFileToS3);
-router.post("/chunk", upload.single("chunkData"), uploadFileToS3);
-router.post("/complete", uploadFileToS3);
+router.post("/initialize", initializeUpload);
+router.post("/chunk", upload.single("chunkData"), uploadChunk);
+router.post("/complete", completeUpload);
 
 export default router;
