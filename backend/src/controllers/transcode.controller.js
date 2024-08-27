@@ -2,12 +2,52 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import fs from "fs";
 import path from "path";
-
+import { asyncHandler } from "../utils/asyncHandler.js";
+import ApiError from "../utils/ApiError.js";
+import ApiResponce from "../utils/ApiResponce.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
+import ApiRenponse from "../utils/ApiResponce.js";
 ffmpeg.setFfmpegPath(ffmpegStatic);
+import { v4 as uuidv4 } from "uuid";
+
+export const hanleFileChunking = asyncHandler(async (req, res) => {
+  const filePath = "./public/temp/Old_empty_Ranch.mp4";
+  const folderName = uuidv4();
+  const chunkDir = `./public/temp/chunks/${folderName}`;
+  if (!fs.existsSync(filePath)) {
+    return res.status(400).json(new ApiError(400, "File deos not exit"));
+  }
+
+  if (!fs.existsSync(chunkDir)) {
+    fs.mkdirSync(chunkDir, { recursive: true });
+  }
+
+  const fileSize = fs.statSync(filePath).size;
+  const chunkSize = 10 * 1024 * 1024; // 10 MB
+  const totalChunks = Math.ceil(fileSize / chunkSize);
+
+  for (let chunkPart = 0; chunkPart < totalChunks; chunkPart++) {
+    const start = chunkPart * chunkSize;
+    const end = Math.min(start + chunkSize, fileSize) - 1;
+    const destinationChunkPath = path.join(chunkDir, `chunk-${chunkPart}`);
+
+    const readStream = fs.createReadStream(filePath, { start, end });
+    const writeStream = fs.createWriteStream(destinationChunkPath);
+
+    await new Promise((resolve, reject) => {
+      readStream.pipe(writeStream);
+      writeStream.on("finish", resolve);
+      writeStream.on("error", reject);
+    });
+  }
+  handleFileMerging(chunkDir);
+  return res
+    .status(200)
+    .json(new ApiResponce(200, {}, "Uploaded Successfully"));
+});
 
 export const handleFileMerging = async (chunkDir) => {
-  const outputPath = "./public/temp/echo.3-s01e01-merged.mp4";
+  const outputPath = "./public/temp/Old_empty_Ranch-merged.mp4";
 
   const chunkFiles = fs.readdirSync(chunkDir).sort((a, b) => {
     const numA = parseInt(a.split("-")[1], 10);
@@ -27,9 +67,6 @@ export const handleFileMerging = async (chunkDir) => {
 
   writeStream.on("finish", () => {
     convertToHLS(outputPath);
-    return res
-      .status(200)
-      .json({ message: "File merging completed successfully" });
   });
 
   writeStream.on("error", (err) => {
@@ -45,7 +82,7 @@ export const processVideoFile = asyncHandler(async (req, res) => {
     console.log("error on file path");
   }
 
-  convertToHLS(filePath, crypto.randomUUID());
+  convertToHLS(filePath, uuidv4());
   return res
     .status(200)
     .json(new ApiRenponse(200, {}, "Coverting process initiated"));
