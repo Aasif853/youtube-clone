@@ -6,15 +6,11 @@
     </div>
     <div class="content">
       <div class="profile-pic">
-        <img
-          ngSrc="'https://yt3.googleusercontent.com/UlKrbeZ4Xz79DUbEbF3FvC0FQ4A_cvpIIzhJQ_wigP8CL_Xf_WF-ryYrrtGpqpD9WzAplsUz=s176-c-k-c0x00ffffff-no-rj'"
-          fill
-          alt="profile"
-        />
+        <img [src]="video.channel?.avatar" fill alt="profile" />
       </div>
       <span class="title">{{ video.title }}</span>
       <span class="channel-name cursor-pointer" [routerLink]="['channel', 1]"
-        >Hyperplexed
+        >{{ video.channel?.title }}
         <span class="verified">
           <svg viewBox="0 0 24 24" focusable="false">
             <path
