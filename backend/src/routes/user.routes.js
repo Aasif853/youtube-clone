@@ -7,10 +7,6 @@ import {
   getCurrentUser,
   updateUserDetails,
   updateUserAvatar,
-  createuser,
-  getUsers,
-  getUser,
-  deleteUser,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/multer.middleware.js";
 import verifyJWT from "../middleware/auth.middleware.js";
@@ -23,12 +19,7 @@ router.route("/refresh-token").post(refreshAccesToken);
 // secured routes
 router.route("/getCurrentUser").get(verifyJWT, getCurrentUser);
 router.route("/udpateAvatar").put(verifyJWT, updateUserAvatar);
-router.route("/").get(getUsers).post(verifyJWT, createuser);
-router
-  .route("/:id")
-  .get(verifyJWT, getUser)
-  .put(verifyJWT, updateUserDetails)
-  .delete(verifyJWT, deleteUser);
+router.route("/:id").put(verifyJWT, updateUserDetails);
 router.route("/logout").post(verifyJWT, logoutUser);
 
 export default router;
