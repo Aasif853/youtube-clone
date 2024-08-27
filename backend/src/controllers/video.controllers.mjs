@@ -1,16 +1,19 @@
 import prisma from "../db/client.mjs";
-import { validationResult } from "express-validator";
+import ApiRenponse from "../utils/ApiResponce.js";
 
 export const getVidoes = async (req, res) => {
   const videos = await prisma.video.findMany({
-    // include: {
-    //   user: true,
-    // },
+    include: {
+      channel: { select: { title: true, avatar: true } },
+    },
   });
-  res.send({ data: videos });
+
+  return res
+    .status(200)
+    .json(new ApiRenponse(200, videos, "Video fetched successfully"));
 };
 export const getSingleVideo = async (req, res, next) => {
-  const id = req.params.id ? parseInt(req.params.id) : null;
+  const id = req.params.id || null;
   console.log("🚀 ~ getSingleVideo ~ id:", id);
   if (!id) {
     return next({ message: `Please provide valid id` });

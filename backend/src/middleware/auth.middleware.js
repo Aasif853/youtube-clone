@@ -19,7 +19,7 @@ const verifyJWT = asyncHandler(async (req, _, next) => {
       // omit: { refreshToken: true },
       where: { id: decodedToken?.id },
     });
-    console.log("requser", user);
+    console.log("request user", user.id);
     if (!user) {
       throw new ApiError(401, "Invalid access token");
     }

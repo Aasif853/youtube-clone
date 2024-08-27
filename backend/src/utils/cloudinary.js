@@ -23,10 +23,14 @@ export const uploadToCloudinary = async (localFilePath, folderName = "") => {
       .catch((error) => {
         console.log(error);
       });
-    fs.unlinkSync(localFilePath);
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
+    }
     return uploadResult;
   } catch (err) {
-    fs.unlinkSync(localFilePath);
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
+    }
   }
 };
 

@@ -51,15 +51,6 @@ export const signIpWithGoogle = asyncHandler(async (req, res) => {
     where: { email },
   });
 
-  const body = {
-    email,
-    username,
-    name,
-    avatar,
-    googleToken,
-    googleId,
-  };
-
   let updatedUser;
   if (existingUser) {
     updatedUser = await prisma.user.update({
@@ -67,9 +58,17 @@ export const signIpWithGoogle = asyncHandler(async (req, res) => {
       data: { googleToken, googleId },
     });
   } else {
-    // const avatarCloudinary = await uploadToCloudinary(body.avatar);
+    const avatarCloudinary = await uploadToCloudinary(avatar, "profilePicture");
+
     updatedUser = await prisma.user.create({
-      data: body,
+      data: {
+        email,
+        username,
+        name,
+        avatar: avatarCloudinary ? avatarCloudinary.url : avatar || "",
+        googleToken,
+        googleId,
+      },
     });
     // create channel for the user
     await prisma.channel
@@ -83,7 +82,7 @@ export const signIpWithGoogle = asyncHandler(async (req, res) => {
       })
       .then(async (data) => {
         await prisma.user.update({
-          where: { id: userId },
+          where: { id: updatedUser.id },
           data: { channelId: data.id },
         });
       });
@@ -261,6 +260,7 @@ export const updateUserAvatar = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponce(200, user, "Avatar uploaded successfully"));
 });
+
 const changeCurrentPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
   const user = await prisma.user.findUnique({ where: { id: req.user?.id } });
@@ -302,20 +302,6 @@ export const createuser = async (req, res, next) => {
   //   return res.status(400).send(err);
   // }
   // const allUser = await prisma.user.findMany();
-};
-
-export const getUser = async (req, res) => {
-  const { user } = req;
-  res.status(200).send({ data: user });
-};
-
-export const deleteUser = async (req, res) => {
-  prisma.user
-    .delete({ where: { id: req.user.id } })
-    .then((data) => {
-      res.sendStatus(200);
-    })
-    .catch((err) => res.sendStatus(400));
 };
 
 const createChannelForUser = async (user) => {

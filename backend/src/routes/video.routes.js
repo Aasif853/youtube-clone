@@ -13,6 +13,5 @@ const router = Router();
 
 router.get("/", getVidoes);
 router.get("/:id", getSingleVideo);
-router.post("/", body("title").isString(), postVideos);
 
 export default router;
