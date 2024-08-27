@@ -24,7 +24,7 @@ model User {
   googleId     String?
   googleToken  String?
   channelId    String?
-  Channel      Channel?
+  channel      Channel?
   comment      Comment[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -32,18 +32,18 @@ model User {
 }
 
 model Channel {
-  id           String         @id @default(uuid())
-  userId       String         @unique
-  email        String
-  title        String
-  description  String?
-  avatar       String?
-  coverImage   String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Video        Video[]
-  User         User           @relation(fields: [userId], references: [id])
-  Subscription Subscription[]
+  id            String         @id @default(uuid())
+  userId        String         @unique
+  email         String
+  title         String
+  description   String?
+  avatar        String?
+  coverImage    String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  videos        Video[]
+  user          User           @relation(fields: [userId], references: [id])
+  subscriptions Subscription[]
 }
 
 model Video {
@@ -60,7 +60,7 @@ model Video {
   userId      String
   channelId   String
   channel     Channel   @relation(fields: [channelId], references: [id])
-  comment     Comment[]
+  comments    Comment[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
