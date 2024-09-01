@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { catchError, finalize, retry, throwError } from 'rxjs';
 import { LoadingService } from '../service/loading.service';
+import { AppSettingService } from '../service/appSetting.service';
 
 export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
   let baseUrl = environment.apiUrl;
@@ -15,14 +16,14 @@ export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
   return next(
     req.clone({
       url: baseUrl + req.url,
-    })
+    }),
   );
 };
 
 // Server Response Time Interceptor
 export const responseTimeInterceptorFunctional: HttpInterceptorFn = (
   req,
-  next
+  next,
 ) => {
   const startTime = Date.now();
   return next(req).pipe(
@@ -30,14 +31,14 @@ export const responseTimeInterceptorFunctional: HttpInterceptorFn = (
       const endTime = Date.now();
       const responseTime = endTime - startTime;
       console.log(`Request to ${req.url} took ${responseTime}ms`);
-    })
+    }),
   );
 };
 
 // Loading Spinner Interceptor
 export const loadingSpinnerInterceptorFunctional: HttpInterceptorFn = (
   req,
-  next
+  next,
 ) => {
   const loadingService = new LoadingService(); // Instantiate the loading service
   loadingService.showLoadingSpinner(); // Show loading spinner UI element
@@ -45,12 +46,13 @@ export const loadingSpinnerInterceptorFunctional: HttpInterceptorFn = (
   return next(req).pipe(
     finalize(() => {
       loadingService.hideLoadingSpinner(); // Hide loading spinner UI element
-    })
+    }),
   );
 };
 
 export const authInterceptorFunctional: HttpInterceptorFn = (req, next) => {
-  const authToken = 'YOUR_AUTH_TOKEN_HERE';
+  const appSettingservice = new AppSettingService();
+  const authToken = appSettingservice.accessToken;
 
   // Clone the request and add the authorization header
   const authReq = req.clone({
@@ -70,7 +72,7 @@ export const retryInterceptorFunctional: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       console.error('Retry Interceptor Functional Error:', error);
       return throwError(() => error);
-    })
+    }),
   );
 };
 

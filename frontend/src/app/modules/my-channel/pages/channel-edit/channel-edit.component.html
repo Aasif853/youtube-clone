@@ -1,0 +1,85 @@
+<section class="container-card mx-auto">
+  <div class="container mx-auto">
+    <form
+      class="grid grid-cols-5 gap-4 content-center"
+      [formGroup]="chennalForm"
+    >
+      <div class="pic-holder cover-holder col-span-5 mb-4">
+        <img
+          id="profilePic"
+          class="pic"
+          [ngSrc]="
+            appSettingService.prepareImgUrl(
+              channelDetails?.coverImage || 'placeholder'
+            )
+          "
+        />
+
+        <Input
+          class="uploadProfileInput"
+          type="file"
+          (change)="handleChange($event, 'coverImage')"
+          id="newBannner"
+          accept="image/*"
+          [disabled]="isUploading"
+          style="display: none"
+        />
+        <label for="newBannner" class="upload-file-block">
+          <div class="text-center">
+            <div class="mb-2">
+              <i class="fa fa-camera fa-2x"></i>
+            </div>
+            <div class="text-uppercase">
+              Update <br />
+              Banner Photo
+            </div>
+          </div>
+        </label>
+      </div>
+      <div class="pic-holder row-span-2">
+        <img
+          id="profilePic"
+          class="pic"
+          [ngSrc]="appSettingService.prepareImgUrl(channelDetails?.avatar)"
+        />
+
+        <Input
+          class="uploadProfileInput"
+          type="file"
+          (change)="handleChange($event, 'avatar')"
+          id="newProfilePhoto"
+          accept="image/*"
+          style="display: none"
+          [disabled]="isUploading"
+        />
+        <label for="newProfilePhoto" class="upload-file-block">
+          <div class="text-center">
+            <div class="mb-2">
+              <i class="fa fa-camera fa-2x"></i>
+            </div>
+            <div class="text-uppercase">
+              Update <br />
+              Profile Photo
+            </div>
+          </div>
+        </label>
+      </div>
+      <mat-form-field appearance="fill" class="col-span-2">
+        <mat-label>Channel Name</mat-label>
+        <input matInput formControlName="title" />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="col-span-2">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" />
+      </mat-form-field>
+      <mat-form-field class="col-span-4">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+    </form>
+
+    <div class="flex items-center justify-end">
+      <button class="btn" (click)="updateChannelDetails()">Update</button>
+    </div>
+  </div>
+</section>

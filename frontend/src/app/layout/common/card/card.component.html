@@ -1,16 +1,27 @@
 @if (video) {
   <div class="card">
     <div class="thumbnail" [routerLink]="['/watch', video.id]">
-      <img [ngSrc]="video.thumbnail" fill alt="Thumbnail" />
+      <img
+        [ngSrc]="appSettingService.prepareImgUrl(video.thumbnail)"
+        fill
+        alt="Thumbnail"
+      />
       <div class="duration">{{ video.duration }}</div>
     </div>
     <div class="content">
       <div class="profile-pic">
-        <img [src]="video.channel?.avatar" fill alt="profile" />
+        <img
+          [ngSrc]="appSettingService.prepareImgUrl(video.channel?.avatar)"
+          fill
+          alt="profile"
+        />
       </div>
       <span class="title">{{ video.title }}</span>
-      <span class="channel-name cursor-pointer" [routerLink]="['channel', 1]"
-        >{{ video.channel?.title }}
+      <span
+        class="channel-name cursor-pointer"
+        [routerLink]="['channel', video.channelId]"
+      >
+        {{ video.channel?.title }}
         <span class="verified">
           <svg viewBox="0 0 24 24" focusable="false">
             <path

@@ -4,6 +4,7 @@ export interface User {
   name?: string;
   username?: string;
   avatar?: string;
+  channelId?: string;
   googleId?: string;
   googleToken?: string;
   refreshToken?: string;

@@ -2,8 +2,6 @@ import { Routes } from "@angular/router";
 import { LayoutComponent } from "./layout/layout.component";
 import { ListingComponent } from "./modules/listing/listing.component";
 import { WatchComponent } from "./modules/watch/watch.component";
-import { ChannelComponent } from "./modules/channel/channel.component";
-import { ProfileComponent } from "./modules/profile/profile.component";
 
 export const routes: Routes = [
   {
@@ -20,11 +18,30 @@ export const routes: Routes = [
       },
       {
         path: "profile",
-        component: ProfileComponent,
+        loadComponent: () =>
+          import("./modules/profile/profile.component").then(
+            (m) => m.ProfileComponent,
+          ),
       },
       {
         path: "channel/:id",
-        component: ChannelComponent,
+        loadChildren: () =>
+          import("./modules/channel/channel.component").then((m) => m.routes),
+        // loadComponent: () =>
+        //   import("./modules/channel/channel.component").then(
+        //     (m) => m.ChannelComponent,
+        //   ),
+      },
+      {
+        path: "my-channel",
+        loadChildren: () =>
+          import("./modules/my-channel/my-channel.component").then(
+            (m) => m.routes,
+          ),
+        // loadComponent: () =>
+        //   import("./modules/channel/channel.component").then(
+        //     (m) => m.ChannelComponent,
+        //   ),
       },
     ],
   },

@@ -1,15 +1,17 @@
-import { inject, Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, ReplaySubject } from "rxjs";
-import { User } from "../types/interfaces";
-import { CoolLocalStorage } from "angular2-cool-storage";
-import { LocalStorageService } from "./localstorage.service";
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { User } from '../types/interfaces';
+import { CoolLocalStorage } from 'angular2-cool-storage';
+import { LocalStorageService } from './localstorage.service';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AppSettingService {
-  public tokenName = "ng-token";
-  private _user: ReplaySubject<User | null> = new ReplaySubject(1);
+  public tokenName = 'ng-token';
+  private _userSource = new BehaviorSubject<any>(null);
+  private _user = this._userSource.asObservable();
   localStorage = inject(LocalStorageService);
   constructor() {
     this.getLocalStorageUser();
@@ -26,15 +28,18 @@ export class AppSettingService {
    */
   set user(value: User | null) {
     // Store the value
-    this._user.next(value);
-    if (value) this.localStorage.setObject("userProfile", value);
+    this._userSource.next(value);
+    if (value) this.localStorage.setObject('userProfile', value);
     else this.removeLocalStoreUser();
   }
 
   get user$(): Observable<User | null> {
-    return this._user.asObservable();
+    return this._user;
   }
 
+  get userData() {
+    return this._userSource.value;
+  }
   /**
    * Setter & getter for access token
    */
@@ -43,31 +48,34 @@ export class AppSettingService {
   }
 
   get accessToken(): string {
-    return this.localStorage.getItem(this.tokenName) ?? "";
+    return this.localStorage.getItem(this.tokenName) ?? '';
   }
 
   removeLocalStoreUser() {
-    this.localStorage.removeItem("userProfile");
+    this.localStorage.removeItem('userProfile');
   }
 
   getLocalStorageUser(): void {
-    const user = this.localStorage.getObject("userProfile") as User;
+    const user = this.localStorage.getObject('userProfile') as User;
     this.user = user && user.refreshToken ? user : null;
   }
 
+  public prepareImgUrl(url: string) {
+    return url ? url.replace(environment.mediaUrl, '') : '';
+  }
   public queryStringFormat(queryParams: any) {
     let reqParams: any = {
       offset:
         queryParams.pageNumber > 0
           ? queryParams.pageNumber * queryParams.pageSize
           : 0,
-      limit: queryParams.pageSize || "",
-      sortField: "createdAt",
-      sortOrder: "DESC",
+      limit: queryParams.pageSize || '',
+      sortField: 'createdAt',
+      sortOrder: 'DESC',
     };
 
     if (queryParams.filter && Object.keys(queryParams.filter).length > 0)
-      reqParams.filter = queryParams.filter;
+      reqParams.filter = JSON.stringify(queryParams.filter);
 
     if (queryParams.queryString)
       reqParams.searchString = queryParams.queryString;
@@ -84,9 +92,9 @@ export class AppSettingService {
 
     let queryString = Object.keys(reqParams)
       .map(function (k) {
-        return encodeURIComponent(k) + "=" + encodeURIComponent(reqParams[k]);
+        return encodeURIComponent(k) + '=' + encodeURIComponent(reqParams[k]);
       })
-      .join("&");
+      .join('&');
 
     return queryString;
   }

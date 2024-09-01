@@ -1,31 +1,28 @@
-import { Component, inject, Input, OnInit } from "@angular/core";
-import { CardComponent } from "../../layout/common/card/card.component";
-import { VideoService } from "../../service/video.service";
+import { Component, inject, Input, OnInit } from '@angular/core';
+import { CardComponent } from '../../layout/common/card/card.component';
+import { VideoService } from '../../service/video.service';
 
-import { CategoryComponent } from "../../layout/common/category/category.component";
-import { BehaviorSubject, combineLatest, Subscription } from "rxjs";
+import { CategoryComponent } from '../../layout/common/category/category.component';
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   map,
   startWith,
   tap,
-} from "rxjs/operators";
-import { InfiniteScrollComponent } from "../../shared/infinit-scroll.component";
+} from 'rxjs/operators';
+import { InfiniteScrollComponent } from '../../shared/infinit-scroll.component';
 
 @Component({
-  selector: "app-listing",
+  selector: 'app-listing',
   standalone: true,
-  imports: [
-    InfiniteScrollComponent,
-    CardComponent,
-    CategoryComponent
-],
-  templateUrl: "./listing.component.html",
-  styleUrl: "./listing.component.scss",
+  imports: [InfiniteScrollComponent, CardComponent, CategoryComponent],
+  templateUrl: './listing.component.html',
+  styleUrl: './listing.component.scss',
 })
 export class ListingComponent implements OnInit {
   @Input() showCategory = true;
+  @Input() chennelId = '';
 
   videoArray: any[] = [];
   videoService = inject(VideoService);
@@ -36,8 +33,8 @@ export class ListingComponent implements OnInit {
     sort$: BehaviorSubject<string>;
   } = {
     paginator$: new BehaviorSubject(1),
-    query$: new BehaviorSubject(""),
-    sort$: new BehaviorSubject("popularity.desc"),
+    query$: new BehaviorSubject(''),
+    sort$: new BehaviorSubject('popularity.desc'),
   };
   loading = true;
   sub!: Subscription;
@@ -45,7 +42,7 @@ export class ListingComponent implements OnInit {
     this.sub = combineLatest([
       this.filters.paginator$.pipe(startWith(1), distinctUntilChanged()),
       this.filters.query$.pipe(
-        startWith(""),
+        startWith(''),
         debounceTime(500),
         distinctUntilChanged(),
         tap((val) => {
@@ -54,7 +51,7 @@ export class ListingComponent implements OnInit {
         }),
       ),
       this.filters.sort$.pipe(
-        startWith(""),
+        startWith(''),
         distinctUntilChanged(),
         tap((val) => {
           this.filters.paginator$.next(1);
@@ -66,8 +63,11 @@ export class ListingComponent implements OnInit {
         distinctUntilChanged(),
         map((data) => {
           this.loading = true;
-
-          return { page: data[0], query: data[1], sort_by: data[2] };
+          let filter: any = { where: {} };
+          if (this.chennelId) {
+            filter.where['channelId'] = this.chennelId;
+          }
+          return { page: data[0], query: data[1], sort_by: data[2], filter };
         }),
       )
       .subscribe((params) => {
@@ -93,7 +93,7 @@ export class ListingComponent implements OnInit {
    *
    */
   onScroll(): void {
-    console.log("onscolled");
+    console.log('onscolled');
     const curPage = this.filters.paginator$.value;
     if (this.loading || this.totalPage == +curPage) return;
 

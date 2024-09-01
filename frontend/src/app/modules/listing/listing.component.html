@@ -1,5 +1,7 @@
 <section class="listing">
-  <!-- <app-category *ngIf="showCategory" /> -->
+  @if (showCategory) {
+    <app-category />
+  }
   <infinite-scroll (scrolled)="onScroll()">
     <section class="main" id="main">
       @if (videoArray.length > 0) {

@@ -12,9 +12,8 @@
   .channel-banner {
     width: 100%;
     aspect-ratio: 12/2;
-    border-radius: $border-radius;
-    // border-radius: calc(#{$border-radius} - 5px) calc(#{$border-radius} - 5px) 0
-    //   0;
+    border-radius: calc(#{$border-radius} - 5px) calc(#{$border-radius} - 5px) 0
+      0;
     overflow: hidden;
     flex-basis: 16vw;
     display: flex;

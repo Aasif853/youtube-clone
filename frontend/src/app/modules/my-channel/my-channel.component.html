@@ -1,32 +1,24 @@
 <section class="channel-container">
-  <!-- Channel Banner -->
-  <section class="channel-banner">
+  <!-- <section class="channel-banner">
     <img
-      [src]="
-        channelDetails.coverImage ||
-        'https://images.unsplash.com/photo-1486597622250-f997d79907f8?w=1400&h=600&fit=crop'
-      "
+      src="https://images.unsplash.com/photo-1486597622250-f997d79907f8?w=1400&h=600&fit=crop"
       fill
       alt="Thumbnail"
     />
   </section>
 
-  <!-- Channel Info -->
   <section class="channel-info">
     <div class="info-container">
       <div class="channel-icon">
         <img
-          [src]="
-            channelDetails.avatar ||
-            'https://images.unsplash.com/photo-1467912681710-2a73a89d88d6?w=80&h=80&fit=crop'
-          "
+          src="https://images.unsplash.com/photo-1467912681710-2a73a89d88d6?w=80&h=80&fit=crop"
           alt=""
         />
       </div>
 
       <div class="channel-title">
         <h1>
-          {{ channelDetails.title }}
+          ReallyCoolVlogs
           <span class="verified">
             <svg viewBox="0 0 24 24" focusable="false">
               <path
@@ -36,22 +28,17 @@
           </span>
         </h1>
 
-        <div class="channel-subscriber-count">
-          {{ channelDetails.subscriptions }} subscribers
-        </div>
+        <div class="channel-subscriber-count">2,126,438 subscribers</div>
       </div>
 
       <div class="channel-subscribe">
-        <!-- <button class="subscribe-btn btn">Upload</button> -->
-        <button class="subscribe-btn btn">Subscribe</button>
-
         <button class="notification-btn btn" aria-label="Enable Notifications">
           <i class="fas fa-bell" aria-hidden="true"></i>
         </button>
+        -
       </div>
     </div>
-  </section>
-  <!-- End of channel info section -->
+  </section> -->
 
   <!-- Channel navigation -->
   <nav class="channel-nav">
@@ -61,14 +48,13 @@
       disableRipple
       mat-align-tabs="start"
     >
-      <mat-tab label="Home">
-        <app-listing [showCategory]="false" [chennelId]="channelId" />
+      <mat-tab label="Edit Channel">
+        <app-channel-edit [channelDetails]="channelDetails" />
       </mat-tab>
-      <mat-tab label="Videos">Content 2</mat-tab>
-      <mat-tab label="Playlists">Content 3</mat-tab>
-      <!-- <mat-tab label="Community">Content 3</mat-tab> -->
-      <!-- <mat-tab label="Channels">Content 3</mat-tab> -->
-      <mat-tab label="About">Content 3</mat-tab>
+      <mat-tab label="Videos"> </mat-tab>
+      <mat-tab label="Upload" routerLink="/upload"
+        ><app-create-video
+      /></mat-tab>
     </mat-tab-group>
   </nav>
   <!-- End of channel navigation -->
