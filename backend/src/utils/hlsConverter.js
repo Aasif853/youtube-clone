@@ -62,15 +62,12 @@ const convertToHLS = async (filePath, uuid) => {
     console.log(
       `HLS conversion starting for ${resolution}, forFile ${filePath}`
     );
-    const outputFileName = `${outoutPath}/${mp4FileName.replace(
-      '.',
-      '_'
-    )}_${resolution}.m3u8`;
-    const segmentFileName = `${outoutPath}/${mp4FileName.replace(
-      '.',
-      '_'
-    )}_${resolution}_%03d.ts`;
-
+    
+    const fileName = mp4FileName.replace('.','_')
+    const resFileName = `${fileName}_${resolution}`
+    const outputFileName = `${outoutPath}/${resFileName}.m3u8`;
+    const segmentFileName = `${outoutPath}/${resFileName}_%03d.ts`;
+   
     await new Promise((resolve, reject) => {
       ffmpeg(filePath)
         .outputOptions([
@@ -91,7 +88,7 @@ const convertToHLS = async (filePath, uuid) => {
     });
     const variantPlaylist = {
       resolution,
-      outputFileName,
+      outputFileName : `${resFileName}.m3u8`,
       bandWidth,
     };
     variantPlaylists.push(variantPlaylist);

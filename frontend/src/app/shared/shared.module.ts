@@ -9,6 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   imports: [
@@ -20,6 +23,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatTabsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule,
+    MatProgressBarModule,
+    MatDialogModule,
   ],
   exports: [
     MatIconModule,
@@ -30,6 +36,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatTabsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule,
+    MatProgressBarModule,
+    MatDialogModule,
   ],
 })
 export class SharedModule {}

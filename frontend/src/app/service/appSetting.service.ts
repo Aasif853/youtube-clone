@@ -76,7 +76,7 @@ export class AppSettingService {
   public queryStringFormat(queryParams: any) {
     let reqParams: any = {
       offset:
-        queryParams.pageNumber > 0
+        queryParams.pageNumber > 1
           ? queryParams.pageNumber * queryParams.pageSize
           : 0,
       limit: queryParams.pageSize || '',

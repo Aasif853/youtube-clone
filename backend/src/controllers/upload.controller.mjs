@@ -88,7 +88,7 @@ export const completeUpload = asyncHandler(async (req, res) => {
     'public/uploads',
     `${uploadData.fileName.replace(' ', '')}`
   );
-
+  
   // Merge chunks
   const chunkFiles = Array.from(
     { length: uploadData.totalChunks },
@@ -106,7 +106,7 @@ export const completeUpload = asyncHandler(async (req, res) => {
   fs.rmdirSync(chunkDir);
   convertToHLS(finalFilePath, uploadId);
 
-  res.status(200).json({
+  return res.status(200).json({
     message: 'Upload complete and Processing the video',
   });
 });

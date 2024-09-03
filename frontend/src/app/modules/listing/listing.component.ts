@@ -68,7 +68,7 @@ export class ListingComponent implements OnInit {
           if (this.chennelId) {
             filter.where['channelId'] = this.chennelId;
           }
-          return { pageNumber: data[0], pageSize: 24, queryString: data[1], sortOrder: data[2], filter };
+          return { pageNumber: data[0] || 0, pageSize: 24, queryString: data[1], sortOrder: data[2], filter };
         }),
       )
       .subscribe((params) => {
