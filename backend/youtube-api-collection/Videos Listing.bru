@@ -5,7 +5,17 @@ meta {
 }
 
 get {
-  url: http://localhost:3000/api/v1/videos/test-upload
+  url: http://localhost:3000/api/v1/videos?limit=1&offset=10
   body: none
   auth: none
+}
+
+params:query {
+  limit: 1
+  offset: 10
+  ~filter: {"where": {"id": "cd7151f2-e46e-4f6e-beb5-6c447960359e"}}
+}
+
+headers {
+  filter: {where: {id: "cd7151f2-e46e-4f6e-beb5-6c447960359e" }
 }

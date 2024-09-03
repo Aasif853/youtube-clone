@@ -1,21 +1,21 @@
-import ffmpeg from "fluent-ffmpeg";
-import ffmpegStatic from "ffmpeg-static";
-import fs from "fs";
-import path from "path";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import ApiError from "../utils/ApiError.js";
-import ApiResponce from "../utils/ApiResponce.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
-import ApiRenponse from "../utils/ApiResponce.js";
+import ffmpeg from 'fluent-ffmpeg';
+import ffmpegStatic from 'ffmpeg-static';
+import fs from 'fs';
+import path from 'path';
+import { asyncHandler } from '../utils/asyncHandler.js';
+import ApiError from '../utils/ApiError.js';
+import ApiResponce from '../utils/ApiResponce.js';
+import ApiRenponse from '../utils/ApiResponce.js';
+
 ffmpeg.setFfmpegPath(ffmpegStatic);
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
 export const hanleFileChunking = asyncHandler(async (req, res) => {
-  const filePath = "./public/temp/Old_empty_Ranch.mp4";
+  const filePath = './public/temp/Old_empty_Ranch.mp4';
   const folderName = uuidv4();
   const chunkDir = `./public/temp/chunks/${folderName}`;
   if (!fs.existsSync(filePath)) {
-    return res.status(400).json(new ApiError(400, "File deos not exit"));
+    return res.status(400).json(new ApiError(400, 'File deos not exit'));
   }
 
   if (!fs.existsSync(chunkDir)) {
@@ -36,22 +36,22 @@ export const hanleFileChunking = asyncHandler(async (req, res) => {
 
     await new Promise((resolve, reject) => {
       readStream.pipe(writeStream);
-      writeStream.on("finish", resolve);
-      writeStream.on("error", reject);
+      writeStream.on('finish', resolve);
+      writeStream.on('error', reject);
     });
   }
   handleFileMerging(chunkDir);
   return res
     .status(200)
-    .json(new ApiResponce(200, {}, "Uploaded Successfully"));
+    .json(new ApiResponce(200, {}, 'Uploaded Successfully'));
 });
 
-export const handleFileMerging = async (chunkDir) => {
-  const outputPath = "./public/temp/Old_empty_Ranch-merged.mp4";
+export const handleFileMerging = async (chunkDirk, finalFilePath) => {
+  const outputPath = './public/temp/Old_empty_Ranch-merged.mp4';
 
   const chunkFiles = fs.readdirSync(chunkDir).sort((a, b) => {
-    const numA = parseInt(a.split("-")[1], 10);
-    const numB = parseInt(b.split("-")[1], 10);
+    const numA = parseInt(a.split('_')[1], 10);
+    const numB = parseInt(b.split('_')[1], 10);
     return numA - numB;
   });
 
@@ -65,48 +65,44 @@ export const handleFileMerging = async (chunkDir) => {
 
   writeStream.end();
 
-  writeStream.on("finish", () => {
+  writeStream.on('finish', () => {
     convertToHLS(outputPath);
   });
 
-  writeStream.on("error", (err) => {
-    return res
-      .status(500)
-      .json({ message: "Error during file merging", error: err.message });
-  });
+  writeStream.on('error', (err) => {});
 };
 
 export const processVideoFile = asyncHandler(async (req, res) => {
-  const filePath = "./public/temp/Old_empty_Ranch.mp4";
+  const filePath = './public/uploads/Video_Playback.mp4';
   if (!fs.existsSync(filePath)) {
-    console.log("error on file path");
+    console.log('error on file path');
   }
 
   convertToHLS(filePath, uuidv4());
   return res
     .status(200)
-    .json(new ApiRenponse(200, {}, "Coverting process initiated"));
+    .json(new ApiRenponse(200, {}, 'Coverting process initiated'));
 });
 
 const convertToHLS = async (filePath, uuid) => {
   if (!fs.existsSync(filePath)) {
-    console.log("error on file path");
+    console.log('error on file path');
   }
   const resolutions = [
     {
-      resolution: "320x180",
-      videoBitrate: "500k",
-      audioBitrate: "64k",
+      resolution: '320x180',
+      videoBitrate: '500k',
+      audioBitrate: '64k',
     },
     {
-      resolution: "854x480",
-      videoBitrate: "1000k",
-      audioBitrate: "128k",
+      resolution: '854x480',
+      videoBitrate: '1000k',
+      audioBitrate: '128k',
     },
     {
-      resolution: "1280x720",
-      videoBitrate: "2500k",
-      audioBitrate: "192k",
+      resolution: '1280x720',
+      videoBitrate: '2500k',
+      audioBitrate: '192k',
     },
   ];
 
@@ -120,15 +116,15 @@ const convertToHLS = async (filePath, uuid) => {
 
   for (const { resolution, videoBitrate, audioBitrate } of resolutions) {
     console.log(
-      `HLS conversion starting for ${resolution}, forFile ${filePath}`,
+      `HLS conversion starting for ${resolution}, forFile ${filePath}`
     );
     const outputFileName = `${outoutPath}/${mp4FileName.replace(
-      ".",
-      "_",
+      '.',
+      '_'
     )}_${resolution}.m3u8`;
     const segmentFileName = `${outoutPath}/${mp4FileName.replace(
-      ".",
-      "_",
+      '.',
+      '_'
     )}_${resolution}_%03d.ts`;
 
     await new Promise((resolve, reject) => {
@@ -145,8 +141,8 @@ const convertToHLS = async (filePath, uuid) => {
           `-hls_segment_filename ${segmentFileName}`,
         ])
         .output(outputFileName)
-        .on("end", () => resolve())
-        .on("error", (err) => reject(err))
+        .on('end', () => resolve())
+        .on('error', (err) => reject(err))
         .run();
     });
     const variantPlaylist = {
@@ -161,17 +157,17 @@ const convertToHLS = async (filePath, uuid) => {
     .map((variantPlaylist) => {
       const { resolution, outputFileName } = variantPlaylist;
       const bandwidth =
-        resolution === "320x180"
+        resolution === '320x180'
           ? 676800
-          : resolution === "854x480"
+          : resolution === '854x480'
             ? 1353600
             : 3230400;
       return `#EXT-X-STREAM-INF:BANDWIDTH=${bandwidth},RESOLUTION=${resolution}\n${outputFileName}`;
     })
-    .join("\n");
+    .join('\n');
   masterPlaylist = `#EXTM3U\n` + masterPlaylist;
 
-  const masterPlaylistFileName = `${mp4FileName.replace(".", "_")}_master.m3u8`;
+  const masterPlaylistFileName = `${mp4FileName.replace('.', '_')}_master.m3u8`;
   const masterPlaylistPath = `${outoutPath}/${masterPlaylistFileName}`;
   fs.writeFileSync(masterPlaylistPath, masterPlaylist);
   console.log(`HLS master m3u8 playlist generated`);
@@ -179,17 +175,17 @@ const convertToHLS = async (filePath, uuid) => {
 };
 
 const uploadToCoudinaty = async (folderPath, uuid) => {
-  console.log("Upload started");
-  console.time("req_time");
+  console.log('Upload started');
+  console.time('req_time');
   if (!fs.existsSync(folderPath)) {
-    throw error("Folder does not exist");
+    throw error('Folder does not exist');
   }
 
   const files = fs.readdirSync(folderPath);
   for (const file of files) {
-    // if (!file.startsWith(mp4FileName.replace('.', '_'))) {
-    //   continue;
-    // }
+    if (!file.startsWith(mp4FileName.replace('.', '_'))) {
+      continue;
+    }
 
     const filePath = path.join(folderPath, file);
 
@@ -198,7 +194,7 @@ const uploadToCoudinaty = async (folderPath, uuid) => {
     // fs.unlinkSync(filePath);
   }
 
-  console.log("Success. Time taken: ");
-  console.timeEnd("req_time");
+  console.log('Success. Time taken: ');
+  console.timeEnd('req_time');
 };
 export default convertToHLS;
