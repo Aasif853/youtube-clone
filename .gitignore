@@ -43,8 +43,8 @@ testem.log
 .DS_Store
 Thumbs.db
 
-
 /frontend/dist
 
 # Environment
 /frontend/src/environments
+/frontend/src/assets/videos

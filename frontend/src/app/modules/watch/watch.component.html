@@ -2,12 +2,7 @@
   <div class="watch">
     <div class="thumbnail">
       <!-- <img [src]="video.thumbnail" alt="Thumbnail" /> -->
-      <video width="100%" controls>
-        <source
-          src="https://codarker-youtube.s3.us-east-2.amazonaws.com/videos/642b9916-3be3-4d67-a949-b70e828abcf1/Old_empty_Ranch_mp4_master.m3u8"
-          type="application/x-mpegURL"
-        />
-      </video>
+      <app-video-player></app-video-player>
       <div class="duration">{{ video.duration }}</div>
     </div>
     <div class="content">
