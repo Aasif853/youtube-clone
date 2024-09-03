@@ -62,15 +62,17 @@ export class ListingComponent implements OnInit {
       .pipe(
         distinctUntilChanged(),
         map((data) => {
+          console.log("🚀 ~ ListingComponent ~ map ~ data:", data)
           this.loading = true;
           let filter: any = { where: {} };
           if (this.chennelId) {
             filter.where['channelId'] = this.chennelId;
           }
-          return { page: data[0], query: data[1], sort_by: data[2], filter };
+          return { pageNumber: data[0], pageSize: 24, queryString: data[1], sortOrder: data[2], filter };
         }),
       )
       .subscribe((params) => {
+        console.log("🚀 ~ ListingComponent ~ .subscribe ~ params:", params)
         this.videoService.getVideosListing(params).subscribe((resp) => {
           this.loading = false;
 

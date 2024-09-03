@@ -67,6 +67,9 @@ export class ChannelEditComponent implements OnInit, OnChanges {
 
   updateChannelDetails() {
     if (this.chennalForm.invalid) {
+      this.appSettingService.openSnackBar(
+        'Please fill all the required details',
+      );
       this.chennalForm.markAllAsTouched();
       return;
     }
@@ -77,6 +80,9 @@ export class ChannelEditComponent implements OnInit, OnChanges {
         (resp) => {
           console.log(resp);
           this.channelDetails = resp.data;
+          this.appSettingService.openSnackBar(
+            'Chennal details updated successfully',
+          );
           this.setFormValue();
         },
         (err) => console.log(err),
@@ -97,6 +103,7 @@ export class ChannelEditComponent implements OnInit, OnChanges {
         (resp) => {
           this.channelDetails.avatar = resp.data.avatar;
           this.channelDetails.coverImage = resp.data.coverImage;
+          this.appSettingService.openSnackBar('Image updated successfully');
           console.log(resp);
         },
         (err) => console.log(err),

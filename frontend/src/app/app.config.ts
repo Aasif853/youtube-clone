@@ -18,7 +18,6 @@ import {
   SocialAuthServiceConfig,
 } from '@abacritt/angularx-social-login';
 import { environment } from '../environments/environment.development';
-import { CoolStorageModule } from 'angular2-cool-storage';
 import { provideImgixLoader } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
@@ -26,7 +25,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(),
     provideAnimationsAsync(),
-    CoolStorageModule,
     provideImgixLoader(environment.mediaUrl),
     provideHttpClient(
       withInterceptors([

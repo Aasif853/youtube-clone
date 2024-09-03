@@ -28,7 +28,7 @@ export class ChannelService {
         return resp.data;
       }),
     );
-  }
+  } 
 
   updateChangeDetails(id: string, params: FormData) {
     return this.http.put('channels/' + id, params).pipe(

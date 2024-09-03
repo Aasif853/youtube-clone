@@ -63,9 +63,9 @@ hr {
   border-color: $light4;
 }
 
-.backdrop-on-mobile {
-  @apply bg-black bg-opacity-60 sm:bg-transparent #{'!important'};
-}
+// .backdrop-on-mobile {
+//   @apply bg-black bg-opacity-60 sm:bg-transparent #{'!important'}; // This is a workaround for the bug in Tailwind CSS
+// }
 
 .container-card {
   background: $dark2;

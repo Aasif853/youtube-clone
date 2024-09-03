@@ -441,7 +441,7 @@ mat-tab-group {
   mat-tab-body {
     background: $dark0;
     padding: 1rem;
-    /* border-radius: 15px; */
+    border-radius: 15px;
   }
   .mdc-tab--active {
     background-color: $dark1;

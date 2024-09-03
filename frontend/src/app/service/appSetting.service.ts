@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { User } from '../types/interfaces';
-import { CoolLocalStorage } from 'angular2-cool-storage';
+// import { CoolLocalStorage } from 'angular2-cool-storage';
 import { LocalStorageService } from './localstorage.service';
 import { environment } from '../../environments/environment.development';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,8 @@ export class AppSettingService {
   private _userSource = new BehaviorSubject<any>(null);
   private _user = this._userSource.asObservable();
   localStorage = inject(LocalStorageService);
+  private _snackBar = inject(MatSnackBar);
+
   constructor() {
     this.getLocalStorageUser();
   }
@@ -62,6 +65,13 @@ export class AppSettingService {
 
   public prepareImgUrl(url: string) {
     return url ? url.replace(environment.mediaUrl, '') : '';
+  }
+
+  openSnackBar(msg: string) {
+    this._snackBar.open(msg, 'OK', {
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
   }
   public queryStringFormat(queryParams: any) {
     let reqParams: any = {
