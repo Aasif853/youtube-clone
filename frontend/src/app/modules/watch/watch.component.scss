@@ -4,13 +4,14 @@
   display: grid;
   grid-template-columns: auto 30%;
   // grid-template-rows: ;
+  margin: 1rem;
   gap: 1rem;
 
   > * {
     background: $dark2;
     border-radius: $border-radius;
     padding: 1rem;
-    border: 2px solid transparent;
+    // border: 2px solid transparent;
     height: 100%;
   }
   .header {
@@ -35,6 +36,8 @@
       width: 100%;
       position: relative;
       padding-top: 30px;
+      padding-inline: 1rem;
+      padding-bottom: 1rem;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;

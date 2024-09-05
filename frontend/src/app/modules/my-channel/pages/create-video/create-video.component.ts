@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
 import { UploadComponent } from '../uploader/uploader.component';
 import {
@@ -26,6 +26,7 @@ const CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB chunks
 })
 export class CreateVideoComponent {
   @ViewChild(UploadComponent) uploadComponent!: UploadComponent;
+  @Input() channelId: any;
   uploaderServcie = inject(UploaderService);
   appSettingService = inject(AppSettingService);
   _matDialog = inject(MatDialog);
@@ -123,6 +124,7 @@ export class CreateVideoComponent {
     }
     const formData = new FormData();
     formData.append('uploadId', uploaderId);
+    formData.append('channelId', this.channelId);
     formData.append('title', value.title);
     formData.append('description', value.description);
     formData.append('thumbnail', this.uploadComponent.imageFile);

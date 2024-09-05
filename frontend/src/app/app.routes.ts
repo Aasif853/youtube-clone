@@ -11,6 +11,7 @@ export const routes: Routes = [
       {
         path: "",
         component: ListingComponent,
+        data: { reuseRoute: true },
       },
       {
         path: "watch/:id",

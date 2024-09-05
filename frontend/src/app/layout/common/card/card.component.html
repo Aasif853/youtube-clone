@@ -1,6 +1,6 @@
 @if (video) {
   <div class="card">
-    <div class="thumbnail" [routerLink]="['/watch', video.id]">
+    <div class="thumbnail" (click)="onClickVideo()">
       <img
         [ngSrc]="appSettingService.prepareImgUrl(video.thumbnail)"
         fill
@@ -31,7 +31,8 @@
         </span>
       </span>
       <span class="views"
-        >{{ video.views }} views . <span class="time">2 months ago</span></span
+        >{{ video.views }} views .
+        <span class="time">{{ video.postedTime }}</span></span
       >
     </div>
   </div>

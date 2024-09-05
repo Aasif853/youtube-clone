@@ -1,7 +1,19 @@
-import { Component, ElementRef, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { SharedModule } from '../shared.module';
 import { CommonModule } from '@angular/common';
 import Hls from 'hls.js';
+import videojs from 'video.js';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'app-video-player',
@@ -11,47 +23,49 @@ import Hls from 'hls.js';
   imports: [SharedModule, CommonModule],
   encapsulation: ViewEncapsulation.None,
 })
-export class VideoPlayerComponent {
+export class VideoPlayerComponent implements OnInit, AfterViewInit, OnChanges {
+  @Input() video: any;
   private hls!: Hls;
-  public videoSrc: string =
-    'assets/videos/1766d173-dab2-435d-9b56-d9ef388daca7/VideoPlayback_mp4_master.m3u8';
-  // 'https://codarker-youtube.s3.amazonaws.com//videos/VideoPlayback_master.m3u8';
+  @ViewChild('videoPlayer', { static: true })
+  videoPlayer!: ElementRef<HTMLVideoElement>;
+
+  player: any;
+  public videoSrc!: string;
+  // 'assets/videos/1766d173-dab2-435d-9b56-d9ef388daca7/VideoPlayback_mp4_master.m3u8';
 
   constructor(private elementRef: ElementRef) {}
 
-  ngOnInit(): void {
-    const video = this.elementRef.nativeElement.querySelector('video');
+  ngOnInit(): void {}
 
-    if (Hls.isSupported()) {
-      this.hls = new Hls();
-      this.hls.loadSource(this.videoSrc);
-      this.hls.attachMedia(video);
+  ngAfterViewInit(): void {
+    this.initPlayer();
+  }
 
-      let defaultOption: any = {
-        controle: ['play-large', 'restart', 'rewind', 'play'],
-      };
-      this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        const availableOption = this.hls.levels.map((i) => i.height);
-        defaultOption['quality'] = {
-          default: availableOption[0],
-          options: availableOption,
-          forced: true,
-        };
-        video.play();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.player && changes['video']) {
+      this.player.src({
+        src: this.videoSourceUrl,
+        type: 'application/x-mpegURL',
       });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = this.videoSrc;
-      video.addEventListener('loadedmetadata', () => {
-        video.play();
-      });
-    } else {
-      console.error('This browser does not support HLS');
+      // this.player.play();
     }
+  }
+  get videoSourceUrl() {
+    return `${environment.awsMediaUrl}/${this.video.id}/${this.video.file_key}_master.m3u8`;
+  }
+  initPlayer(): void {
+    this.player = videojs(this.videoPlayer.nativeElement, {
+      controls: true,
+      autoplay: false,
+      preload: 'auto',
+      fluid: true,
+      playbackRates: [0.5, 1, 1.5, 2],
+    });
   }
 
   ngOnDestroy(): void {
-    if (this.hls) {
-      this.hls.destroy();
+    if (this.player) {
+      this.player.dispose();
     }
   }
 }

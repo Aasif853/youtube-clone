@@ -2,7 +2,7 @@
   <div class="watch">
     <div class="thumbnail">
       <!-- <img [src]="video.thumbnail" alt="Thumbnail" /> -->
-      <app-video-player></app-video-player>
+      <app-video-player [video]="video" />
       <div class="duration">{{ video.duration }}</div>
     </div>
     <div class="content">
@@ -10,13 +10,13 @@
       <div class="channel">
         <div class="profile-pic">
           <img
-            src="https://yt3.googleusercontent.com/UlKrbeZ4Xz79DUbEbF3FvC0FQ4A_cvpIIzhJQ_wigP8CL_Xf_WF-ryYrrtGpqpD9WzAplsUz=s176-c-k-c0x00ffffff-no-rj"
+          [ngSrc]="appSettingService.prepareImgUrl(video.channel?.avatar)"
             alt="profile"
           />
         </div>
         <div>
           <span class="channel-name">
-            Hyperplexed
+            {{ video.channel?.title }}
             <span class="verified">
               <svg viewBox="0 0 24 24" focusable="false">
                 <path

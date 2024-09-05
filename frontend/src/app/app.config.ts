@@ -1,5 +1,5 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, RouteReuseStrategy } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
@@ -19,6 +19,7 @@ import {
 } from '@abacritt/angularx-social-login';
 import { environment } from '../environments/environment.development';
 import { provideImgixLoader } from '@angular/common';
+import { CustomReuseStrategy } from './shared/reuse-routing';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(),
     provideAnimationsAsync(),
     provideImgixLoader(environment.mediaUrl),
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
     provideHttpClient(
       withInterceptors([
         baseUrlInterceptor,

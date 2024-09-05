@@ -74,10 +74,11 @@ export class ListingComponent implements OnInit {
       .subscribe((params) => {
         console.log("🚀 ~ ListingComponent ~ .subscribe ~ params:", params)
         this.videoService.getVideosListing(params).subscribe((resp) => {
+          console.log("🚀 ~ ListingComponent ~ this.videoService.getVideosListing ~ resp:", resp)
           this.loading = false;
 
-          this.videoArray = [...this.videoArray, ...resp];
-          this.totalPage = resp.total_pages;
+          this.videoArray = [...this.videoArray, ...resp.items];
+          this.totalPage = resp.totalCount;
         });
       });
   }
@@ -97,7 +98,8 @@ export class ListingComponent implements OnInit {
   onScroll(): void {
     console.log('onscolled');
     const curPage = this.filters.paginator$.value;
-    if (this.loading || this.totalPage == +curPage) return;
+    const curDataLength = this.videoArray.length
+    if (this.loading || this.totalPage >= curDataLength) return;
 
     this.filters.paginator$.next(this.filters.paginator$.value + 1);
   }

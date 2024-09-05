@@ -1,6 +1,6 @@
 import { NgOptimizedImage, provideImgixLoader } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {  Router, RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { AppSettingService } from '../../../service/appSetting.service';
 
@@ -15,4 +15,9 @@ export class CardComponent {
   @Input() video: any;
 
   appSettingService = inject(AppSettingService);
+  route = inject(Router)
+  onClickVideo(){
+    this.video.views += 1
+    this.route.navigate(['/watch', this.video.id])
+  }
 }
