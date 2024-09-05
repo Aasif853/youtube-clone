@@ -47,22 +47,23 @@ model Channel {
 }
 
 model Video {
-  id          String    @id @default(uuid())
-  title       String    @db.VarChar(255)
+  id          String      @id @default(uuid())
+  title       String      @db.VarChar(255)
   description String?
   thumbnail   String?
-  video_file  String?
+  file_key    String?
   url         String?
-  views       Int?      @default(0)
-  likes       Int?      @default(0)
-  duration    String?
-  isPublished Boolean   @default(false)
+  views       Int?        @default(0)
+  likes       Int?        @default(0)
+  duration    Float?
+  isPublished Boolean     @default(false)
   userId      String
   channelId   String
-  channel     Channel   @relation(fields: [channelId], references: [id])
+  status      VideoStatus @default(PENDING)
+  channel     Channel     @relation(fields: [channelId], references: [id])
   comments    Comment[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model Subscription {
@@ -73,6 +74,21 @@ model Subscription {
   channel    Channel  @relation(fields: [channelId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model UploadHistory {
+  id             Int     @id @default(autoincrement())
+  fileName       String
+  fileSize       String
+  duration       String?
+  totalChunks    Int?
+  uploadedChunks Int?
+}
+
+enum VideoStatus {
+  PENDING
+  PROCESSIGN
+  COMPLETE
 }
 
 model WatchHistory {

@@ -2,12 +2,13 @@ import ffmpeg from 'fluent-ffmpeg';
 import ffmpegStatic from 'ffmpeg-static';
 import fs from 'fs';
 import path from 'path';
+import prisma from '../db/client.mjs';
 import { uploadToCloudinary } from '../utils/cloudinary.js';
 import { uploadToAwsS3 } from '../utils/awsFileUploader.js';
 const __dirname = path.resolve();
 ffmpeg.setFfmpegPath(ffmpegStatic);
 
-const HLS_TIME = 15;
+const HLS_TIME = 10;
 
 const RESOLUTIONS = [
   {
@@ -28,16 +29,16 @@ const RESOLUTIONS = [
     audioBitrate: '128k',
     bandWidth: '1128000',
   },
-  // {
-  //   "resolution": "1280x720",
-  //   "videoBitrate": "2500k",  // 2.5 Mbps
-  //   "audioBitrate": "128k"
-  //    bandWidth: '2628000'
-  // },
+  {
+    resolution: '1280x720',
+    videoBitrate: '2500k', // 2.5 Mbps
+    audioBitrate: '128k',
+    bandWidth: '2628000',
+  },
   // {
   //   "resolution": "1920x1080",
   //   "videoBitrate": "4500k",  // 4.5 Mbps
-  //   "audioBitrate": "192k"
+  //   "audioBitrate": "192k",
   //    bandWidth: '4692000'
   // }
 ];
@@ -46,7 +47,7 @@ const convertToHLS = async (filePath, uuid) => {
     console.log('error on file path');
   }
 
-  const mp4FileName = path.basename(filePath).replace(' ', '');
+  const mp4FileName = path.basename(filePath);
   const variantPlaylists = [];
   const outoutPath = `./public/videos/${uuid}`;
   if (!fs.existsSync(outoutPath)) {
@@ -62,12 +63,12 @@ const convertToHLS = async (filePath, uuid) => {
     console.log(
       `HLS conversion starting for ${resolution}, forFile ${filePath}`
     );
-    
-    const fileName = mp4FileName.replace('.','_')
-    const resFileName = `${fileName}_${resolution}`
+
+    const fileName = mp4FileName;
+    const resFileName = `${fileName}_${resolution}`;
     const outputFileName = `${outoutPath}/${resFileName}.m3u8`;
     const segmentFileName = `${outoutPath}/${resFileName}_%03d.ts`;
-   
+
     await new Promise((resolve, reject) => {
       ffmpeg(filePath)
         .outputOptions([
@@ -88,7 +89,7 @@ const convertToHLS = async (filePath, uuid) => {
     });
     const variantPlaylist = {
       resolution,
-      outputFileName : `${resFileName}.m3u8`,
+      outputFileName: `${resFileName}.m3u8`,
       bandWidth,
     };
     variantPlaylists.push(variantPlaylist);
@@ -102,13 +103,13 @@ const convertToHLS = async (filePath, uuid) => {
     .join('\n');
   masterPlaylist = `#EXTM3U\n` + masterPlaylist;
 
-  const masterPlaylistFileName = `${mp4FileName.replace('.', '_')}_master.m3u8`;
+  const masterPlaylistFileName = `${mp4FileName}_master.m3u8`;
   const masterPlaylistPath = `${outoutPath}/${masterPlaylistFileName}`;
   fs.writeFileSync(masterPlaylistPath, masterPlaylist);
   console.log(`HLS master m3u8 playlist generated`);
   fs.unlinkSync(filePath);
   console.log(`Uploading to AWS S3 bucket`);
-  // await uploadToS3(outoutPath, mp4FileName, uuid);
+  await uploadToS3(outoutPath, mp4FileName, uuid);
 
   // uploadToCoudinaty(outoutPath, uuid);
 };
@@ -134,7 +135,14 @@ const uploadToS3 = async (hlsFolder, mp4FileName, uuid) => {
     });
 
     // Wait for all uploads to complete
-    await Promise.all(uploadPromises);
+    await Promise.all(uploadPromises).then(async (success) => {
+      if (success) {
+        await prisma.video.update({
+          data: { status: 'COMPLETE' },
+          where: { id: uuid },
+        });
+      }
+    });
 
     // Clean up local folder after successful uploads
     fs.rmdirSync(hlsFolder, { recursive: true });
@@ -142,7 +150,6 @@ const uploadToS3 = async (hlsFolder, mp4FileName, uuid) => {
   } catch (error) {
     console.error('Error during upload to S3:', error);
   } finally {
-    console.timeEnd('req_time');
   }
 };
 

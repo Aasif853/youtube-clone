@@ -12,18 +12,23 @@ export const getVidoes = async (req, res) => {
   const sortField = req.query.sortField ? req.query.sortField : 'id';
   const sortOrder = req.query.sortOrder ? req.query.sortOrder : 'asc';
 
-  const videos = await prisma.video.findMany({
+  const payload = {
     where: filter?.where,
     skip: offset,
     take: limit,
     include: {
       channel: { select: { title: true, avatar: true } },
     },
-  });
+  }
+  const data = await prisma.$transaction([
+    prisma.video.count({where: filter?.where}),
+    prisma.video.findMany(payload)
+   ])
+  
 
   return res
     .status(200)
-    .json(new ApiRenponse(200, videos, 'Video fetched successfully'));
+    .json(new ApiRenponse(200, {rows: data[1] , count: data[0] ?? 0}, 'Video fetched successfully'));
 };
 export const getSingleVideo = async (req, res, next) => {
   const id = req.params.id || null;
@@ -34,14 +39,25 @@ export const getSingleVideo = async (req, res, next) => {
 
   const video = await prisma.video.findUnique({
     where: { id },
-    // include: {
-    //   user: true,
-    // },
+    include: {
+      channel: {
+        select: {avatar: true, title: true, }, 
+        // include :{ 
+        //   _count: {
+        //     select: {
+        //       subscriptions: true,
+        //     }
+        //   }
+        // }
+      }
+    },
   });
   if (!video) {
     res.status(404);
     return next({ message: `Could not find data with id ${id}` });
   }
+
+  await prisma.video.update({where :{ id}, data: { views : { increment: 1}}})
   res.send({ data: video });
 };
 
