@@ -9,7 +9,7 @@ export const getChannelDetails = asyncHandler(async (req, res, next) => {
   if (!id) {
     throw new ApiError(400, `Please provide valid id`);
   }
-  console.log('channelID', id);
+  console.log('channelID', id, req.user);
   const channel = await prisma.channel.findUnique({
     where: { id },
     include: {
@@ -22,7 +22,14 @@ export const getChannelDetails = asyncHandler(async (req, res, next) => {
     },
   });
 
-  console.log('channelDetail', channel);
+  if (req.user) {
+    const isSubscribed = await prisma.subscription.findFirst({
+      // where: { AND: [{ userId: req.user?.id }, { channelId }] },
+      where: { userId: req.user?.id, channelId: id },
+    });
+    console.log('🚀 ~ getChannelDetails ~ isSubscribed:', isSubscribed);
+    channel.isSubscribed = !!isSubscribed;
+  }
   if (!channel) {
     throw new ApiError(404, `Could not find data with id ${id}`);
   }
@@ -49,6 +56,28 @@ export const subscribeToChannel = asyncHandler(async (req, res, next) => {
   });
 
   return res.status(201).json(new ApiRensonse(201, 'Subscribed successfully'));
+});
+export const unSubscribeToChannel = asyncHandler(async (req, res, next) => {
+  const channelId = req.params?.id || null;
+
+  if (!channelId) throw new ApiError(400, 'Please provide valid channel id');
+
+  const isSubscribed = await prisma.subscription.findFirst({
+    where: { AND: [{ userId: req.user?.id }, { channelId }] },
+  });
+  if (!isSubscribed) {
+    return res
+      .status(400)
+      .json(new ApiRensonse(400, 'You have not subscribed to this channel'));
+  }
+
+  await prisma.subscription.delete({
+    where: { id: isSubscribed.id },
+  });
+
+  return res
+    .status(201)
+    .json(new ApiRensonse(201, 'Unsubscribed successfully'));
 });
 
 export const updateChannel = asyncHandler(async (req, res) => {

@@ -11,12 +11,12 @@ ffmpeg.setFfmpegPath(ffmpegStatic);
 const HLS_TIME = 10;
 
 const RESOLUTIONS = [
-  {
-    resolution: '426x240',
-    videoBitrate: '300k', // 0.3 Mbps
-    audioBitrate: '64k',
-    bandWidth: '364000',
-  },
+  // {
+  //   resolution: '426x240',
+  //   videoBitrate: '300k', // 0.3 Mbps
+  //   audioBitrate: '64k',
+  //   bandWidth: '364000',
+  // },
   {
     resolution: '640x360',
     videoBitrate: '500k', // 0.5 Mbps
