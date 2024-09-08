@@ -1,1 +1,5 @@
+@if (isLoading$ | async) {
+  <mat-progress-bar mode="indeterminate" color="warn"></mat-progress-bar>
+}
+<ngx-spinner type="ball-clip-rotate-multiple"></ngx-spinner>
 <router-outlet></router-outlet>

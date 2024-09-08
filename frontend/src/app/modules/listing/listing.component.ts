@@ -12,6 +12,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { InfiniteScrollComponent } from '../../shared/infinit-scroll.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-listing',
@@ -26,6 +27,8 @@ export class ListingComponent implements OnInit {
 
   videoArray: any[] = [];
   videoService = inject(VideoService);
+
+  spinner = inject(NgxSpinnerService);
   totalPage = 0;
   filters: {
     paginator$: BehaviorSubject<number>;
@@ -62,19 +65,22 @@ export class ListingComponent implements OnInit {
       .pipe(
         distinctUntilChanged(),
         map((data) => {
-          console.log("🚀 ~ ListingComponent ~ map ~ data:", data)
           this.loading = true;
           let filter: any = { where: {} };
           if (this.chennelId) {
             filter.where['channelId'] = this.chennelId;
           }
-          return { pageNumber: data[0] || 0, pageSize: 24, queryString: data[1], sortOrder: data[2], filter };
+          return {
+            pageNumber: data[0] || 0,
+            pageSize: 24,
+            queryString: data[1],
+            sortOrder: data[2],
+            filter,
+          };
         }),
       )
       .subscribe((params) => {
-        console.log("🚀 ~ ListingComponent ~ .subscribe ~ params:", params)
         this.videoService.getVideosListing(params).subscribe((resp) => {
-          console.log("🚀 ~ ListingComponent ~ this.videoService.getVideosListing ~ resp:", resp)
           this.loading = false;
 
           this.videoArray = [...this.videoArray, ...resp.items];
@@ -98,7 +104,7 @@ export class ListingComponent implements OnInit {
   onScroll(): void {
     console.log('onscolled');
     const curPage = this.filters.paginator$.value;
-    const curDataLength = this.videoArray.length
+    const curDataLength = this.videoArray.length;
     if (this.loading || this.totalPage >= curDataLength) return;
 
     this.filters.paginator$.next(this.filters.paginator$.value + 1);

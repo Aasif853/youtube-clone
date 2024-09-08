@@ -88,7 +88,7 @@
                 <source [src]="fileUrl" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-              <p class="mb-6">{{ videoFile?.name }}</p>
+              <p class="mb-6">{{ getVidoeFilname }}</p>
             </div>
             <div>
               <div class="flex items-center justify-between m-2">
@@ -147,7 +147,7 @@
                 />
               </div>
               @if (imageFile) {
-                <p class="mb-6">{{ imageFile?.name }}</p>
+                <p class="mb-6">{{ getImageFilename }}</p>
               }
             </div>
           </div>
@@ -198,52 +198,4 @@
   </div>
 </section>
 
-<!-- <div
-  class="fixed inset-0 z-[99999] bg-black bg-opacity-50 transition-opacity"
-  x-show="modalOpen"
-  x-transition:enter="transition ease-out duration-200"
-  x-transition:enter-start="opacity-0"
-  x-transition:enter-end="opacity-100"
-  x-transition:leave="transition ease-out duration-100"
-  x-transition:leave-start="opacity-100"
-  x-transition:leave-end="opacity-0"
-  aria-hidden="true"
-  x-cloak
-></div>
-
-<div
-  id="modal"
-  class="fixed inset-0 z-[99999] flex px-4 md:px-6 py-6"
-  role="dialog"
-  aria-modal="true"
-  x-show="modalOpen"
-  x-transition:enter="transition ease-out duration-300"
-  x-transition:enter-start="opacity-0 scale-75"
-  x-transition:enter-end="opacity-100 scale-100"
-  x-transition:leave="transition ease-out duration-200"
-  x-transition:leave-start="opacity-100 scale-100"
-  x-transition:leave-end="opacity-0 scale-75"
-  x-cloak
->
-  <div class="max-w-5xl mx-auto h-full flex items-center">
-    <div
-      class="w-full max-h-full rounded-3xl shadow-2xl aspect-video bg-black overflow-hidden"
-      @keydown.escape.window="modalOpen = false"
-      @click.outside="modalOpen = false"
-    >
-      <video
-        x-init="$watch('modalOpen', value => value ? $el.play() : $el.pause())"
-        width="1920"
-        height="1080"
-        loop
-        controls
-      >
-        <source
-          src="https://cruip-tutorials.vercel.app/modal-video/video.mp4"
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </video>
-    </div>
-  </div>
-</div> -->
+<

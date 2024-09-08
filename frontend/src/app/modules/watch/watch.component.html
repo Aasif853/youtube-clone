@@ -1,16 +1,16 @@
 <section class="watch-container">
   <div class="watch">
-    <div class="thumbnail">
+    <div class="video-player-container">
       <!-- <img [src]="video.thumbnail" alt="Thumbnail" /> -->
       <app-video-player [video]="video" />
-      <div class="duration">{{ video.duration }}</div>
     </div>
     <div class="content">
       <span class="title">{{ video.title }}</span>
+
       <div class="channel">
         <div class="profile-pic">
           <img
-          [ngSrc]="appSettingService.prepareImgUrl(video.channel?.avatar)"
+            [ngSrc]="appSettingService.prepareImgUrl(video.channel?.avatar)"
             alt="profile"
           />
         </div>
@@ -30,25 +30,24 @@
             <!-- <span class="time">2 months ago</span> -->
           </span>
         </div>
-        <div>
-          <span class="views"
-            >{{ video.views }} views .
-            <span class="time">2 months ago</span>
-          </span>
-        </div>
       </div>
 
       <div class="description">
-        <span class="header">Description</span>
+        <span class="views"
+          >{{ video.views }} views .
+          <span class="time">2 months ago</span>
+        </span>
+        <!-- <span class="header">Description</span> -->
+        <p>{{ video.description }}</p>
       </div>
     </div>
   </div>
-  <div class="recommend">
+  <!-- <div class="recommend">
     <span class="header">Recommended</span>
     <hr />
-  </div>
-  <div class="comments">
+  </div> -->
+  <!-- <div class="comments">
     <span class="header">Comments</span>
     <hr class="my-2" />
-  </div>
+  </div> -->
 </section>

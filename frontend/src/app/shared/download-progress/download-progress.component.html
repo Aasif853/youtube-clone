@@ -2,7 +2,7 @@
   <!-- Dismiss button -->
   <ng-container *ngIf="data.dismissible">
     <div class="absolute top-0 right-0 pt-4 pr-4">
-      <button mat-icon-button [matDialogClose]="undefined">
+      <button mat-icon-button [matDialogClose]="false">
         <mat-icon class="text-secondary"> close</mat-icon>
       </button>
     </div>
@@ -57,9 +57,9 @@
         mode="determinate"
         [value]="progress"
         mode="buffer"
-        [bufferValue]="(progress + 5)?.toFixed(2)"
+        [bufferValue]="+progress + 5"
       ></mat-progress-bar>
-      <div class="text-secondary">Progress {{ progress?.toFixed(2) }}%</div>
+      <div class="text-secondary">Progress {{ decimalFormat }}%</div>
     </div>
   </div>
   <!-- Actions -->
@@ -69,7 +69,7 @@
     >
       <button
         mat-stroked-button
-        [matDialogClose]="'cancelled'"
+        [matDialogClose]="false"
         color="warn"
         (click)="onCancel()"
       >

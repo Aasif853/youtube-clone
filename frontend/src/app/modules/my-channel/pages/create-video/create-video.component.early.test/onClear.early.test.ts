@@ -27,7 +27,7 @@ describe('CreateVideoComponent.onClear() onClear method', () => {
     mockUploadComponent = new MockUploadComponent() as any;
     mockFormGroup = new MockFormGroup() as any;
     mockAppSettingService = {
-      openSnackBar: jest.fn(),
+      showSnackBar: jest.fn(),
     } as any;
     mockChannelService = {} as any;
 

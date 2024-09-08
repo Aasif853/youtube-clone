@@ -1,3 +1,92 @@
-<video  width="100%" #videoPlayer
-height="100%" id="videoPlayer"  class="video-js vjs-default-skin vjs-big-play-centered"
-preload="auto" controls></video>
+<div
+  class="video-container"
+  [ngClass]="{ paused: !isPlaying, theater: isTheaterMode }"
+>
+  <video
+    #videoPlayer
+    id="videoPlayer"
+    (click)="togglePlay()"
+    (playing)="isBuffering = false"
+    (progress)="onVideoPlay($event)"
+    (timeupdate)="setCurrentTime($event)"
+    preload="auto"
+  ></video>
+  @if (isBuffering) {
+    <div class="video-overlay">
+      <mat-spinner class="spinner"></mat-spinner>
+      <img [src]="video.thumbnail" alt="" />
+    </div>
+  }
+  <div class="actions">
+    @if (animationState) {
+      <mat-icon @actionIcon>{{ isPlaying ? "play_arrow" : "pause" }}</mat-icon>
+    }
+  </div>
+  <div class="video-controls-container">
+    <div
+      class="timeline-container"
+      (mousemove)="onTimelineMouseMove($event)"
+      (mousedown)="toggleScrubbing($event)"
+      #timeLineContainer
+      [style.--progress-position]="playedPercent"
+      [style.--preview-position]="fragmentPercent"
+    >
+      <div class="timeline">
+        <!-- <div class="preview-img"></div> -->
+        <div class="thumb-indicator"></div>
+      </div>
+    </div>
+    <div class="controls">
+      <!-- <button class="play-pause-btn">Play</button> -->
+      <button
+        mat-icon-button
+        class="play-pause-bt"
+        aria-label="Play"
+        (click)="togglePlay()"
+      >
+        <mat-icon>{{ isPlaying ? "pause" : "play_arrow" }}</mat-icon>
+      </button>
+      <div class="volume-container">
+        <button mat-icon-button aria-label="Play" (click)="toggleMute()">
+          <mat-icon>{{
+            isMuted ? "volume_off" : isHighVolume ? "volume_up" : "volume_down"
+          }}</mat-icon>
+          <!-- <mat-icon>volume_down</mat-icon> -->
+        </button>
+        <input
+          class="volume-slider"
+          type="range"
+          (input)="onVolumeSliderChange($event)"
+          min="0"
+          max="1"
+          step="any"
+          [(ngModel)]="videoElement.volume"
+          value="1"
+        />
+      </div>
+      <div class="duration-container">
+        <div class="current-time">{{ formatDuration(currentTime) }}</div>
+        /
+        <div class="total-time">{{ formatDuration(totalTime) }}</div>
+      </div>
+      <button
+        class="speed-btn wide"
+        aria-label="Play"
+        (click)="changePlaybackSpeed()"
+      >
+        {{ playbackSpeed }}
+      </button>
+      <button mat-icon-button aria-label="Play" (click)="toggleMiniPlayer()">
+        <mat-icon>picture_in_picture_alt</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Play" (click)="toggleTheaterMode()">
+        <mat-icon>crop_3_2</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Play" (click)="toggleFullscreen()">
+        <mat-icon>{{
+          isFullScreen ? "fullscreen" : "fullscreen_exit"
+        }}</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

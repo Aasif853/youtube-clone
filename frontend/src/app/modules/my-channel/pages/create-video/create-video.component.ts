@@ -1,4 +1,10 @@
-import { Component, inject, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
 import { UploadComponent } from '../uploader/uploader.component';
 import {
@@ -7,13 +13,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ChannelService } from '../../../../service/channel.service';
 import { AppSettingService } from '../../../../service/appSetting.service';
-import { title } from 'process';
 import { UploaderService } from '../../../../service/uploader.service';
-import { concatMap, from, merge, Subject, takeUntil, tap } from 'rxjs';
+import { Subject } from 'rxjs';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DownloadProgressDialogComponent } from '../../../../shared/download-progress/download-progress.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 const CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB chunks
 @Component({
@@ -29,6 +34,7 @@ export class CreateVideoComponent {
   @Input() channelId: any;
   uploaderServcie = inject(UploaderService);
   appSettingService = inject(AppSettingService);
+  spinner = inject(NgxSpinnerService);
   _matDialog = inject(MatDialog);
   videoForm: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -41,16 +47,16 @@ export class CreateVideoComponent {
   onUpload() {
     if (this.videoForm.invalid) {
       this.videoForm.markAsTouched();
-      this.appSettingService.openSnackBar('Please fill the rquired details');
+      this.appSettingService.showSnackBar('Please fill the rquired details');
       return;
     }
 
     if (!this.uploadComponent.videoFile) {
-      this.appSettingService.openSnackBar('Please select the vidoe file');
+      this.appSettingService.showSnackBar('Please select the vidoe file');
       return;
     }
     if (!this.uploadComponent.imageFile) {
-      this.appSettingService.openSnackBar('Please select the thumnail');
+      this.appSettingService.showSnackBar('Please select the thumnail');
       return;
     }
     this.initializeUpload();
@@ -128,15 +134,19 @@ export class CreateVideoComponent {
     formData.append('title', value.title);
     formData.append('description', value.description);
     formData.append('thumbnail', this.uploadComponent.imageFile);
-
-    this.uploaderServcie.completeUpload(formData).subscribe((resp) => {
-      console.log(
-        '🚀 ~ CreateVideoComponent ~ this.uploaderServcie.completeUpload ~ data:',
-        resp,
-      );
-      this.appSettingService.openSnackBar(resp.message);
-      // this.onClear();
-    });
+    this.spinner.show();
+    this.uploaderServcie.completeUpload(formData).subscribe(
+      (resp) => {
+        console.log(
+          '🚀 ~ CreateVideoComponent ~ this.uploaderServcie.completeUpload ~ data:',
+          resp,
+        );
+        this.appSettingService.showSnackBar(resp.message);
+        // this.onClear();
+      },
+      () => {},
+      () => this.spinner.hide(),
+    );
   }
 
   onClear() {

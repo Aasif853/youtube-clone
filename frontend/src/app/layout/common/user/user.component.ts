@@ -1,79 +1,75 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  effect,
   ElementRef,
   inject,
   OnInit,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
-} from "@angular/core";
-import { SharedModule } from "../../../shared/shared.module";
+} from '@angular/core';
+import { SharedModule } from '../../../shared/shared.module';
 import {
   GoogleSigninButtonModule,
   GoogleLoginProvider,
   SocialAuthService,
   SocialUser,
-} from "@abacritt/angularx-social-login";
-import { MatButton } from "@angular/material/button";
-import { Overlay, OverlayRef } from "@angular/cdk/overlay";
-import { TemplatePortal } from "@angular/cdk/portal";
+} from '@abacritt/angularx-social-login';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
 
-import { User } from "../../../types/interfaces";
-import { AppSettingService } from "../../../service/appSetting.service";
-import { takeUntil } from "rxjs";
-import { AuthService } from "../../../service/auth.service";
-import { RouterModule } from "@angular/router";
+import { UserInterface } from '../../../types/interfaces';
+import { AppSettingService } from '../../../service/appSetting.service';
+import { AuthService } from '../../../service/auth.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
-  selector: "app-user",
+  selector: 'app-user',
   standalone: true,
   imports: [RouterModule, SharedModule, GoogleSigninButtonModule],
-  templateUrl: "./user.component.html",
-  styleUrl: "./user.component.scss",
+  templateUrl: './user.component.html',
+  styleUrl: './user.component.scss',
 })
 export class UserComponent implements OnInit {
-  @ViewChild("userOrigin") private _userOrigin!: ElementRef;
-  @ViewChild("userPanel")
+  @ViewChild('userOrigin') private _userOrigin!: ElementRef;
+  @ViewChild('userPanel')
   private _userPanel!: TemplateRef<any>;
-  user!: User | null;
+  user!: UserInterface | undefined | null;
   socialUser!: SocialUser;
   isUserValidated: boolean = false;
   private _overlayRef!: OverlayRef;
 
   socialAuthService = inject(SocialAuthService);
-  authService = inject(AuthService);
-  private _changeDetectorRef = inject(ChangeDetectorRef);
+  public authService = inject(AuthService);
   private _overlay = inject(Overlay);
   private _viewContainerRef = inject(ViewContainerRef);
   appSettingService = inject(AppSettingService);
+  private router = inject(Router);
 
+  constructor() {}
   ngOnInit() {
-    this.appSettingService.user$.subscribe((user) => {
-      this.isUserValidated = true;
-      this.user = user;
-      console.log("LoggedUser", user);
-      this._changeDetectorRef.markForCheck();
+    this.authService.userSettings$.subscribe((data) => {
+      console.log('🚀 ~ UserComponent ~ ngOnInit ~ data:', data);
     });
     this.socialAuthService.authState.subscribe((user) => {
-      console.log(
-        "🚀 ~ AppComponent ~ this.socialAuthService.authState.subscribe ~ user:",
-        user,
-      );
       this.socialUser = user;
       if (user) this.signIn(user);
     });
   }
   closePanel() {}
   signInWithGoogle(): void {
-    console.log("sinincallsed");
     this.socialAuthService
       .signIn(GoogleLoginProvider.PROVIDER_ID)
       .then((x) => console.log(x));
   }
 
+  get userData() {
+    return this.authService.userData;
+  }
   signIn(data: SocialUser) {
-    const params: User = {
+    const params: UserInterface = {
       name: data.name,
       email: data.email,
       username: data.name,
@@ -83,20 +79,38 @@ export class UserComponent implements OnInit {
     };
     this.authService.signInUser(params).subscribe(
       (userData) => {
-        console.log("Userdata", userData);
-        this.appSettingService.user = userData;
-        this.appSettingService.accessToken = userData.accessToken;
+        console.log('Userdata', userData);
+        this.authService.accessToken = userData.accessToken;
+        this.authService.setUserSettings(userData);
       },
       (err) => {
-        console.log("error", err);
+        console.log('error', err);
       },
     );
   }
+
+  onActionClick(action: string) {
+    this._overlayRef.detach();
+    switch (action) {
+      case 'channel':
+        this.router.navigate(['/my-channel']);
+        break;
+      case 'profile':
+        this.router.navigate(['/profile']);
+        break;
+      case 'setting':
+        this.router.navigate(['/profile']);
+        break;
+      case 'logout':
+        this.signOut();
+        break;
+    }
+  }
   signOut() {
-    this.appSettingService.accessToken = "";
-    this.appSettingService.removeLocalStoreUser();
-    this.appSettingService.user = null;
     this.socialAuthService.signOut();
+    this.authService.logout();
+    this._overlayRef.detach();
+    this.router.navigate(['/']);
   }
 
   // -----------------------------------------------------------------------------------------------------
@@ -107,16 +121,16 @@ export class UserComponent implements OnInit {
    * Open the notifications panel
    */
   openPanel(): void {
-    console.log("onCLIck", this._userOrigin);
+    console.log('onCLIck', this._userOrigin);
     // Return if the notifications panel or its origin is not defined
     if (!this._userPanel || !this._userOrigin) {
       return;
     }
-    console.log("onCLIck");
+    console.log('onCLIck');
     // Create the overlay if it doesn't exist
     if (!this._overlayRef) {
       this._createOverlay();
-      console.log("onCLIck");
+      console.log('onCLIck');
     }
 
     // Attach the portal to the overlay
@@ -132,7 +146,7 @@ export class UserComponent implements OnInit {
     // Create the overlay
     this._overlayRef = this._overlay.create({
       hasBackdrop: true,
-      backdropClass: "fuse-backdrop-on-mobile",
+      backdropClass: 'fuse-backdrop-on-mobile',
       scrollStrategy: this._overlay.scrollStrategies.block(),
       positionStrategy: this._overlay
         .position()
@@ -141,28 +155,28 @@ export class UserComponent implements OnInit {
         .withPush(true)
         .withPositions([
           {
-            originX: "start",
-            originY: "bottom",
-            overlayX: "start",
-            overlayY: "top",
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
           },
           {
-            originX: "start",
-            originY: "top",
-            overlayX: "start",
-            overlayY: "bottom",
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'bottom',
           },
           {
-            originX: "end",
-            originY: "bottom",
-            overlayX: "end",
-            overlayY: "top",
+            originX: 'end',
+            originY: 'bottom',
+            overlayX: 'end',
+            overlayY: 'top',
           },
           {
-            originX: "end",
-            originY: "top",
-            overlayX: "end",
-            overlayY: "bottom",
+            originX: 'end',
+            originY: 'top',
+            overlayX: 'end',
+            overlayY: 'bottom',
           },
         ]),
     });

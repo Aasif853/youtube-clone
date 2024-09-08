@@ -1,4 +1,4 @@
-export interface User {
+export interface UserInterface {
   id?: number;
   email: string;
   name?: string;
@@ -8,9 +8,10 @@ export interface User {
   googleId?: string;
   googleToken?: string;
   refreshToken?: string;
+  accessToken?: string;
 }
 
-export interface Video {
+export interface VideoInterface {
   id: string;
   title: string;
   description?: string;
@@ -20,15 +21,15 @@ export interface Video {
   likes?: number;
   duration?: number;
   userId: number;
-  user?: User;
-  comment?: Comment;
+  user?: UserInterface;
+  comment?: CommentInterface;
 }
 
-export interface Comment {
+export interface CommentInterface {
   id: number;
   text: string;
   userId?: number;
-  user?: User;
+  user?: UserInterface;
   videoId?: number;
-  video?: Video;
+  video?: VideoInterface;
 }

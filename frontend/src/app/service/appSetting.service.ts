@@ -1,8 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
-import { User } from '../types/interfaces';
-// import { CoolLocalStorage } from 'angular2-cool-storage';
-import { LocalStorageService } from './localstorage.service';
 import { environment } from '../../environments/environment.development';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -10,67 +6,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   providedIn: 'root',
 })
 export class AppSettingService {
-  public tokenName = 'ng-token';
-  private _userSource = new BehaviorSubject<any>(null);
-  private _user = this._userSource.asObservable();
-  localStorage = inject(LocalStorageService);
   private _snackBar = inject(MatSnackBar);
 
-  constructor() {
-    this.getLocalStorageUser();
-  }
-
-  // -----------------------------------------------------------------------------------------------------
-  // @ Accessors
-  // -----------------------------------------------------------------------------------------------------
-
-  /**
-   * Setter & getter for user
-   *
-   * @param value
-   */
-  set user(value: User | null) {
-    // Store the value
-    this._userSource.next(value);
-    if (value) this.localStorage.setObject('userProfile', value);
-    else this.removeLocalStoreUser();
-  }
-
-  get user$(): Observable<User | null> {
-    return this._user;
-  }
-
-  get userData() {
-    return this._userSource.value;
-  }
-  /**
-   * Setter & getter for access token
-   */
-  set accessToken(token: string) {
-    this.localStorage.setItem(this.tokenName, token);
-  }
-
-  get accessToken(): string {
-    return this.localStorage.getItem(this.tokenName) ?? '';
-  }
-
-  removeLocalStoreUser() {
-    this.localStorage.removeItem('userProfile');
-  }
-
-  getLocalStorageUser(): void {
-    const user = this.localStorage.getObject('userProfile') as User;
-    this.user = user && user.refreshToken ? user : null;
-  }
+  constructor() {}
 
   public prepareImgUrl(url: string) {
     return url ? url.replace(environment.mediaUrl, '') : '';
   }
 
-  openSnackBar(msg: string) {
+  showSnackBar(msg: string) {
     this._snackBar.open(msg, 'OK', {
       horizontalPosition: 'end',
       verticalPosition: 'top',
+      duration: 10000,
     });
   }
   public queryStringFormat(queryParams: any) {

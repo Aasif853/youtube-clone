@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { catchError, finalize, retry, throwError } from 'rxjs';
 import { LoadingService } from '../service/loading.service';
-import { AppSettingService } from '../service/appSetting.service';
+import { inject } from '@angular/core';
 
 export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
   let baseUrl = environment.apiUrl;
@@ -40,7 +40,7 @@ export const loadingSpinnerInterceptorFunctional: HttpInterceptorFn = (
   req,
   next,
 ) => {
-  const loadingService = new LoadingService(); // Instantiate the loading service
+  const loadingService = inject(LoadingService); // Instantiate the loading servi
   loadingService.showLoadingSpinner(); // Show loading spinner UI element
 
   return next(req).pipe(
@@ -51,9 +51,11 @@ export const loadingSpinnerInterceptorFunctional: HttpInterceptorFn = (
 };
 
 export const authInterceptorFunctional: HttpInterceptorFn = (req, next) => {
-  const appSettingservice = new AppSettingService();
-  const authToken = appSettingservice.accessToken;
-
+  // const authService = inject(AuthService)
+  let authToken = '';
+  if (typeof localStorage !== 'undefined') {
+    authToken = localStorage.getItem('ng-token') ?? '';
+  }
   // Clone the request and add the authorization header
   const authReq = req.clone({
     setHeaders: {

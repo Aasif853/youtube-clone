@@ -20,6 +20,7 @@ import {
 } from '@angular/forms';
 import { NgOptimizedImage } from '@angular/common';
 import { AppSettingService } from '../../../../service/appSetting.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/png', 'image/svg+xml'];
 @Component({
   selector: 'app-channel-edit',
@@ -39,6 +40,7 @@ export class ChannelEditComponent implements OnInit, OnChanges {
   @Input() channelDetails: any;
   channelService = inject(ChannelService);
   appSettingService = inject(AppSettingService);
+  spinner = inject(NgxSpinnerService);
   allowedFileTypes = ALLOWED_FILE_TYPES;
   chennalForm: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -67,25 +69,26 @@ export class ChannelEditComponent implements OnInit, OnChanges {
 
   updateChannelDetails() {
     if (this.chennalForm.invalid) {
-      this.appSettingService.openSnackBar(
+      this.appSettingService.showSnackBar(
         'Please fill all the required details',
       );
       this.chennalForm.markAllAsTouched();
       return;
     }
-
+    this.spinner.show();
     this.channelService
       .updateChangeDetails(this.channelDetails.id, this.chennalForm.value)
       .subscribe(
         (resp) => {
           console.log(resp);
           this.channelDetails = resp.data;
-          this.appSettingService.openSnackBar(
+          this.appSettingService.showSnackBar(
             'Chennal details updated successfully',
           );
           this.setFormValue();
         },
         (err) => console.log(err),
+        () => this.spinner.hide(),
       );
   }
 
@@ -97,17 +100,22 @@ export class ChannelEditComponent implements OnInit, OnChanges {
     const formDat = new FormData();
     formDat.append(imageFor, file);
     this.isUploading = true;
+    this.spinner.show();
     this.channelService
       .updateChangeImages(this.channelDetails.id, formDat)
       .subscribe(
         (resp) => {
           this.channelDetails.avatar = resp.data.avatar;
           this.channelDetails.coverImage = resp.data.coverImage;
-          this.appSettingService.openSnackBar('Image updated successfully');
+          this.appSettingService.showSnackBar('Image updated successfully');
           console.log(resp);
         },
         (err) => console.log(err),
-        () => (this.isUploading = false),
+
+        () => {
+          this.isUploading = false;
+          this.spinner.hide();
+        },
       );
   }
 }

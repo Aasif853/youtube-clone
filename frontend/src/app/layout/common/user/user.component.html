@@ -1,7 +1,7 @@
-@if (user) {
+@if (authService.userData) {
   <button class="profile-icon" tabindex="0" (click)="openPanel()" #userOrigin>
     <span class="profile-pic">
-      <img [src]="user.avatar" alt="Profile" />
+      <img [src]="userData?.avatar" alt="Profile" />
     </span>
     <span class="arrow-down-icon">
       <svg
@@ -15,56 +15,58 @@
       </svg>
     </span>
   </button>
-} @else {
-  @if (isUserValidated && !user) {
-    <asl-google-signin-button
-      class="profile-icon"
-      type="standard"
-      theme="filled_black"
-      size="medium"
-    ></asl-google-signin-button>
-  }
+} @else if (authService.userData === null) {
+  <asl-google-signin-button
+    class="profile-icon"
+    type="standard"
+    theme="filled_black"
+    size="medium"
+  ></asl-google-signin-button>
 }
 
 <ng-template #userPanel>
-  @if (user) {
-    <div
-      class="profile-card fixed inset-0 sm:static min-w-90 sm:inset-auto flex flex-col sm:min-w-90 sm:w-90 sm:rounded-2xl overflow-hidden shadow-lg"
-    >
-      <!-- Header -->
-      <div class="flex shrink-0 px-3 pt-3">
-        <div class="channel">
-          <div class="profile-pic">
-            <img [src]="user.avatar" alt="profile" />
-          </div>
-          <div>
-            <span class="channel-name">
-              {{ user.name }}
-              <span class="verified">
-                <svg viewBox="0 0 24 24" focusable="false">
-                  <path
-                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z"
-                  ></path>
-                </svg>
-              </span>
-            </span>
-            <span class="user-email">{{ user.email }} </span>
-          </div>
+  <div
+    class="profile-card fixed inset-0 sm:static min-w-90 sm:inset-auto flex flex-col sm:min-w-90 sm:w-90 sm:rounded-2xl overflow-hidden shadow-lg"
+  >
+    <!-- Header -->
+    <div class="flex shrink-0 px-3 pt-3">
+      <div class="channel">
+        <div class="profile-pic">
+          <img [src]="userData?.avatar" alt="profile" />
         </div>
-      </div>
-      <hr />
-      <!-- Content -->
-      <div
-        class="relative w-full flex flex-col flex-auto sm:max-h-120 overflow-y-auto"
-      >
-        <div class="flex flex-col flex-auto sm:justify-start">
-          <div class="action-item" routerLink="/my-channel">Channel</div>
-          <div class="action-item" routerLink="/profile">Profile</div>
-          <div class="action-item" routerLink="/channel">Settings</div>
-          <hr />
-          <div class="action-item" (click)="signOut()">Logout</div>
+        <div>
+          <span class="channel-name">
+            {{ userData?.name }}
+            <span class="verified">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path
+                  d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z"
+                ></path>
+              </svg>
+            </span>
+          </span>
+          <span class="user-email">{{ userData?.email }} </span>
         </div>
       </div>
     </div>
-  }
+    <hr />
+    <!-- Content -->
+    <div
+      class="relative w-full flex flex-col flex-auto sm:max-h-120 overflow-y-auto"
+    >
+      <div class="flex flex-col flex-auto sm:justify-start">
+        <div class="action-item" (click)="onActionClick('channel')">
+          Channel
+        </div>
+        <div class="action-item" (click)="onActionClick('profile')">
+          Profile
+        </div>
+        <div class="action-item" (click)="onActionClick('setting')">
+          Settings
+        </div>
+        <hr />
+        <div class="action-item" (click)="onActionClick('logout')">Logout</div>
+      </div>
+    </div>
+  </div>
 </ng-template>

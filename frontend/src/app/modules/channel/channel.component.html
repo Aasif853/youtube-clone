@@ -43,7 +43,9 @@
 
       <div class="channel-subscribe">
         <!-- <button class="subscribe-btn btn">Upload</button> -->
-        <button class="subscribe-btn btn">Subscribe</button>
+        <button class="subscribe-btn btn" (click)="subscibeToChannel()">
+          {{ channelDetails.isSubscribed ? "Unsubscribe" : "Subscribe" }}
+        </button>
 
         <button class="notification-btn btn" aria-label="Enable Notifications">
           <i class="fas fa-bell" aria-hidden="true"></i>
@@ -61,10 +63,9 @@
       disableRipple
       mat-align-tabs="start"
     >
-      <mat-tab label="Home">
+      <mat-tab label="Vidoes">
         <app-listing [showCategory]="false" [chennelId]="channelId" />
       </mat-tab>
-      <mat-tab label="Videos">Content 2</mat-tab>
       <mat-tab label="Playlists">Content 3</mat-tab>
       <!-- <mat-tab label="Community">Content 3</mat-tab> -->
       <!-- <mat-tab label="Channels">Content 3</mat-tab> -->

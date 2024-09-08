@@ -34,7 +34,7 @@ export const appConfig: ApplicationConfig = {
         responseTimeInterceptorFunctional,
         loadingSpinnerInterceptorFunctional,
         authInterceptorFunctional,
-        retryInterceptorFunctional,
+        // retryInterceptorFunctional,
         loggingInterceptorFunctional,
       ]),
     ),

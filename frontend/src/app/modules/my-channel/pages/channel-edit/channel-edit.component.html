@@ -8,11 +8,8 @@
         <img
           id="profilePic"
           class="pic"
-          [ngSrc]="
-            appSettingService.prepareImgUrl(
-              channelDetails?.coverImage || 'placeholder'
-            )
-          "
+          fill
+          [ngSrc]="appSettingService.prepareImgUrl(channelDetails?.coverImage)"
         />
 
         <Input
@@ -40,6 +37,7 @@
         <img
           id="profilePic"
           class="pic"
+          fill
           [ngSrc]="appSettingService.prepareImgUrl(channelDetails?.avatar)"
         />
 

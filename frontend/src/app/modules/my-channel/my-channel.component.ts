@@ -1,12 +1,20 @@
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { ListingComponent } from '../listing/listing.component';
 import { CreateVideoComponent } from './pages/create-video/create-video.component';
 import { ActivatedRoute, Routes } from '@angular/router';
 import { ChannelEditComponent } from './pages/channel-edit/channel-edit.component';
 import { AppSettingService } from '../../service/appSetting.service';
-import { User } from '../../types/interfaces';
 import { ChannelService } from '../../service/channel.service';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-channel',
@@ -23,20 +31,24 @@ import { ChannelService } from '../../service/channel.service';
 })
 export class MyChannelComponent implements OnInit {
   user: any;
+
   appSettingService = inject(AppSettingService);
-  channelId: any;
+  authService = inject(AuthService);
+  channelId!: string;
   channelDetails!: any;
   route = inject(ActivatedRoute);
   channelService = inject(ChannelService);
 
   ngOnInit(): void {
-    this.user = this.appSettingService.userData;
+    this.authService.userSettings$.subscribe((data) => {
+      this.user = data;
+      this.onUserChange();
+    });
+  }
+
+  onUserChange() {
     this.channelId = this.user?.channelId;
-    console.log(
-      '🚀 ~ MyChannelComponent ~ ngOnInit ~ channelId:',
-      this.channelId,
-      this.user,
-    );
+
     if (this.channelId) this.getChnnelDetails();
   }
 

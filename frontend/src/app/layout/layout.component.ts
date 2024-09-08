@@ -1,4 +1,10 @@
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { SidebarComponent } from './common/sidebar/sidebar.component';
@@ -26,8 +32,15 @@ import { LoadingService } from '../service/loading.service';
 })
 export class LayoutComponent implements OnInit {
   public loaderService = inject(LoadingService);
-  isLoading = this.loaderService.loading;
+  public isLoading: boolean = false;
+
+  constructor() {
+    effect(() => {
+      this.isLoading = this.loaderService.loading();
+      console.log('Loading spinner updated:', this.isLoading);
+    });
+  }
   ngOnInit(): void {
-    console.log('loaderserice in layout', this.loaderService.loading());
+    // Listen for changes to the user signal
   }
 }

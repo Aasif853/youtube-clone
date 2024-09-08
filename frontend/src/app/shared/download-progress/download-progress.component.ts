@@ -51,6 +51,10 @@ export class DownloadProgressDialogComponent {
     return control.hasError(errorName);
   };
 
+  get decimalFormat() {
+    return this.progress?.toFixed(2);
+  }
+
   onGenerate(action: any) {}
   onCancel() {
     this._unsubscribeAll.next(null);

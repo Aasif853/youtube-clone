@@ -70,6 +70,12 @@ export class UploadComponent {
     this.fileUrl = null;
   }
 
+  get getVidoeFilname() {
+    return this.videoFile?.name || '';
+  }
+  get getImageFilename() {
+    return this.videoFile?.name || '';
+  }
   handleRemovesThumbnail() {
     if (this.thumbnailInput && this.thumbnailInput.nativeElement) {
       this.thumbnailInput.nativeElement.value = null;

@@ -1,4 +1,3 @@
-
 import {
   AfterViewInit,
   Component,
@@ -9,12 +8,12 @@ import {
   OnInit,
   Output,
   ViewChild,
-} from "@angular/core";
+} from '@angular/core';
 
 @Component({
   standalone: true,
   imports: [],
-  selector: "infinite-scroll",
+  selector: 'infinite-scroll',
   template: `<ng-content></ng-content>
     <div #anchor></div>`,
 })
@@ -23,7 +22,7 @@ export class InfiniteScrollComponent
 {
   @Input() options = {};
   @Output() scrolled = new EventEmitter();
-  @ViewChild("anchor") anchor!: ElementRef<HTMLElement>;
+  @ViewChild('anchor') anchor!: ElementRef<HTMLElement>;
 
   private observer!: IntersectionObserver;
 
@@ -48,11 +47,13 @@ export class InfiniteScrollComponent
     const style = window.getComputedStyle(this.element);
 
     return (
-      style.getPropertyValue("overflow") === "auto" ||
-      style.getPropertyValue("overflow-y") === "scroll"
+      style.getPropertyValue('overflow') === 'auto' ||
+      style.getPropertyValue('overflow-y') === 'scroll'
     );
   }
   ngOnDestroy() {
-    this.observer.disconnect();
+    if (this.observer) {
+      this.observer.disconnect();
+    }
   }
 }
