@@ -48,3 +48,5 @@ Thumbs.db
 # Environment
 /frontend/src/environments
 /frontend/src/assets/videos
+
+.early.coverage

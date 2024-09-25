@@ -2,18 +2,18 @@
   @if (showCategory) {
     <app-category />
   }
-  <infinite-scroll (scrolled)="onScroll()">
-    <section class="main" id="main">
-      @if (videoArray.length > 0) {
-        @for (video of videoArray; track video.id) {
-          <app-card [video]="video" />
-        }
+  <!-- <infinite-scroll (scrolled)="onScroll()"> -->
+  <section class="main" id="main">
+    @if (videoArray.length > 0) {
+      @for (video of videoArray; track video.id) {
+        <app-card [video]="video" />
       }
-      @if (loading) {
-        @for (i of [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; track i) {
-          <app-card />
-        }
+    }
+    @if (loading) {
+      @for (i of [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]; track i) {
+        <app-card />
       }
-    </section>
-  </infinite-scroll>
+    }
+  </section>
+  <!-- </infinite-scroll> -->
 </section>

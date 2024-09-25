@@ -1,17 +1,16 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   getVidoes,
   getSingleVideo,
   postVideos,
-} from "../controllers/video.controllers.mjs";
-import { body } from "express-validator";
+} from '../controllers/video.controllers.mjs';
 
-import multer from "multer";
+import multer from 'multer';
 const upload = multer();
 
 const router = Router();
 
-router.get("/", getVidoes);
-router.get("/:id", getSingleVideo);
+router.get('/', getVidoes);
+router.get('/:id', getSingleVideo);
 
 export default router;
